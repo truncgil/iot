@@ -26,6 +26,8 @@ $(function(){
                         'command' : '{{$c2->json}}',
                         'sonuc' : d
                     });
+
+                    
             } else {
                 $('#sonuc{{$c2->id}}').html("{{$c2->imei}} cihazı aktif olmadığından komut gönderilemedi");
             }

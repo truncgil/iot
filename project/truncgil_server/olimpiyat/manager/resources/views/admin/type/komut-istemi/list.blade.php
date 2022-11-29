@@ -28,7 +28,10 @@
 						<button type="button" class="btn  btn-secondary btn-sm" onclick="$('#c{{$a->id}}').trigger('click');" title="{{__('Resim Yükle')}}"><i class="fa fa-upload"></i></button>
 						@if($a->cover!='')
 						<a teyit="{{__('Resmi kaldırmak istediğinizden emin misiniz')}}" title="{{__('Resmi kaldır')}}" href="{{url('admin-ajax/cover-delete?id='.$a->id)}}" class="btn btn-secondary btn-sm "><i class="fa fa-times"></i></a>
-						<a title="{{__('Resmi indir')}}" href="{{url('cache/download/'.$a->cover)}}" class="btn btn-secondary btn-sm"><i class="fa fa-download"></i></a>
+						<div title="{{__('Resmi indir')}}" onclick="
+						location.href='{{url('cache/download/'.$a->cover)}}';
+						$('.preloader').addClass('d-none');
+						" class="btn btn-secondary btn-sm"><i class="fa fa-download"></i></div>
 						@endif
 						</div>
 						<form action="{{url('admin-ajax/cover-upload')}}" id="f{{$a->id}}"  class="hidden-upload" enctype="multipart/form-data" method="post">
