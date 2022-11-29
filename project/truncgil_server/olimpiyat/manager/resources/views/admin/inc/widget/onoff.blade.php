@@ -15,14 +15,17 @@ $(function(){
    });
 
    $("#modal{{$c2->id}} .no").on("click", function(){
-    if($('#onoff{{$c2->id}}').is(":checked")) {
+    
+        if($('#onoff{{$c2->id}}').is(":checked")) {
             $('#onoff{{$c2->id}}').removeAttr("checked");
             $('#onoff{{$c2->id}}').prop("checked",false);
         } else {
             $('#onoff{{$c2->id}}').attr("checked","checked");
             $('#onoff{{$c2->id}}').prop("checked",true);
         }
+        
    });
+   
    function rollBack() {
         window.setTimeout(function(){
             $("#modal{{$c2->id}}").modal("hide");
@@ -67,7 +70,7 @@ $(function(){
                         $("#modal{{$c2->id}} .fa").removeClass("fa-spin");
                         $("#modal{{$c2->id}} .fa").removeClass("fa-spinner");
                         $("#modal{{$c2->id}} .fa").addClass("fa-check-circle");
-                        $("#modal{{$c2->id}} .no").removeClass("d-none").html("OK");
+                        //$("#modal{{$c2->id}} .no").removeClass("d-none").html("OK");
 
                         $("#modal{{$c2->id}} .text").html("Yazılan değer: "+decimal);
                         $("#modal{{$c2->id}} .title").html("Yazma tamamlandı!");
