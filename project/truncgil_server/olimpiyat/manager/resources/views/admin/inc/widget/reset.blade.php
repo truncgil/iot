@@ -3,14 +3,12 @@
 $(function(){
     var title = $("#modal{{$c2->id}} .title").html();
     var text = $("#modal{{$c2->id}} .text").html();
-   $('#onoff{{$c2->id}}').on("click",function(){
+    var tiklanilan; 
+   $('.reset{{$c2->id}}').on("click",function(){
         //$('#sonuc{{$c2->id}}').html('Komut gönderiliyor...');
         $("#modal{{$c2->id}}").modal();
-        if($(this).is(":checked")) {
-            $("#modal{{$c2->id}} .type").html("Aç");
-        } else {
-            $("#modal{{$c2->id}} .type").html("Kapa");
-        }
+        tiklanilan = $(this);
+    
         
    });
 
@@ -46,10 +44,16 @@ $(function(){
             $("#modal{{$c2->id}} .fa").addClass("fa-spinner");
             $("#modal{{$c2->id}} .text").html("Lütfen bekleyiniz");
             $("#modal{{$c2->id}} .title").html("Değer yazılıyor...");
-            var sendCommand = "{{$c2->json2}}";
-            if($('#onoff{{$c2->id}}').is(":checked")) {
-                sendCommand = "{{$c2->json}}";
+            var sendCommand = "{{$c2->json}}";
+            var diger = $(".command-2{{$c2->id}}");
+            var bu = $(".command-1{{$c2->id}}");
+          //  console.log(tiklanilan);
+            if(tiklanilan.hasClass("command-2{{$c2->id}}")) {
+                sendCommand = "{{$c2->json2}}";
+                diger = $(".command-1{{$c2->id}}");
+                bu = $(".command-2{{$c2->id}}");
             }
+            console.log(sendCommand);
             $.get('https://app.olimpiyat.com.tr/client.php',{
                 'imei' : '{{$c2->imei}}',
                 'command' : sendCommand
@@ -58,12 +62,13 @@ $(function(){
                     var decimal = parseInt(
                             d
                             .trim()
-                            .substring(
-                                    {{$c2->bas}}, 
-                                    {{$c2->son}}
-                                ), 
+                            , 
                             16
                         );
+                        tiklanilan = "";
+                        bu.addClass("d-none");
+                        diger.removeClass("d-none");
+
                         $("#hexSonuc").val(d);         
                         $('#sonuc{{$c2->id}}').html(decimal);
 
@@ -112,15 +117,9 @@ $(function(){
 
 <div class="row">
     <div class="col-12 text-center">
-    <label
-    style="    "
-    class="float-none css-control css-control-lg css-control-primary css-switch">
-    <input id="onoff{{$c2->id}}" on="{{$c2->json}}" off="{{$c2->json2}}" type="checkbox" class="css-control-input">
-    <span class="css-control-indicator indicator{{$c2->id}}"></span> 
-
-    
-</label>
-<div class="text-center">{{$c2->title}}</div>
+        <div class="btn reset{{$c2->id}} btn-danger reset command command-1{{$c2->id}} btn-hero">{{e2("Reset Yap")}}</div>
+        <div class="btn reset{{$c2->id}} btn-danger reset command d-none command-2{{$c2->id}} d-none btn-hero">{{e2("Reset Kapat")}}</div>
+        <p>{{$c2->title}}</p>
     </div>
 </div>
     <div id="sonuc{{$c2->id}}"></div>
@@ -140,7 +139,7 @@ $(function(){
         
         <i class="fa fa-info-circle fa-2x"></i> 
         <h2 class="title">Uyarı</h2>
-        <div class="text"><strong><span class="type"></span></strong> değeri yazılacak. Devam etmek istiyor musunuz?</div> 
+        <div class="text"><strong><span class="type"></span></strong> reset değeri yazılacak. Devam etmek istiyor musunuz?</div> 
 
       </div>
 

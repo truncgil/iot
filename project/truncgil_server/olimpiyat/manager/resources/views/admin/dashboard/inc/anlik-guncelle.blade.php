@@ -26,6 +26,7 @@
                                 ), 
                             16
                         )/ mask;
+            console.log(command + ":" + d + ":" + decimal);
           //  //console.log("donen deger " + decimal);
             if(!isNaN(decimal)) {
                 var random = decimal;//+(Math.random() * 60).toFixed(2);
@@ -95,7 +96,7 @@
             httpClient(gauge, imei, command, bas, son, mask);
             //console.log("send " + command);
         }
-    },1000);
+    },5000);
 
         var k = 0;
 /*
