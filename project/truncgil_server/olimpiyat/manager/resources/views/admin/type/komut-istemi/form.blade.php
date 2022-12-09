@@ -24,6 +24,7 @@
                                   <option value="write"  <?php if($c2->alt_type=="write") echo "selected"; ?>>Yazma Komutu</option>
                                   <option value="onoff"  <?php if($c2->alt_type=="onoff") echo "selected"; ?>>On Off Toggle</option>
                                   <option value="reset"  <?php if($c2->alt_type=="reset") echo "selected"; ?>>Reset</option>
+                                  <option value="digital-input"  <?php if($c2->alt_type=="digital-input") echo "selected"; ?>>Digital Input</option>
                                 </select>
 
                             </div>

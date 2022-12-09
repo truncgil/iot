@@ -12,8 +12,13 @@
     function httpClient(gauge, imei, command, bas, son, mask) {
         stop = true;
      //   clearInterval(interval);
+        $.ajaxSetup({
+            // Disable caching of AJAX responses
+            cache: false
+        });
         $.get('{{env('TCP_CLIENT_URL')}}',{
             imei : imei,
+            '_' :  $.now(),
             command: command
         },function(d){
             
@@ -85,15 +90,17 @@
     interval = window.setInterval(function(){
         if(!stop) {
             //console.log("position " + position);
-            var widget = $(".read-widget:eq("+position+") .widget-guncelle");
-            var gauge = $(".read-widget:eq("+position+") .truncgil-gauge").attr('id');
-            var imei = widget.attr('data-imei');
-            var command = widget.attr('data-command');
-            var bas = widget.attr('data-bas');
-            var son = widget.attr('data-son');
-            var mask = widget.attr('data-mask');
+            /*
+            let widget = $(".read-widget:eq("+position+") .widget-guncelle");
+            let gauge = $(".read-widget:eq("+position+") .truncgil-gauge").attr('id');
+            let imei = widget.attr('data-imei');
+            let command = widget.attr('data-command');
+            let bas = widget.attr('data-bas');
+            let son = widget.attr('data-son');
+            let mask = widget.attr('data-mask');
             //console.log(gauge);
             httpClient(gauge, imei, command, bas, son, mask);
+            */
             //console.log("send " + command);
         }
     },5000);

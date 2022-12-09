@@ -1,5 +1,20 @@
 @include("admin.dashboard.inc.dashboard-css")
+<div class="modal" id="tumunu-guncelle-modal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
 
+
+      <!-- Modal body -->
+      <div class="modal-body text-center">
+        <i style="font-size:50px;" class="fa fa-spin fa-spinner"></i> <br>
+        Güncelleniyor. Lütfen bekleyiniz...
+      </div>
+
+
+
+    </div>
+  </div>
+</div>
 <div class="content">    
     <div class="row komutlar">
         <?php $yetkilerim = cihaz_yetkilerim();
@@ -17,45 +32,139 @@
             ->orderBy("s","ASC")->get();
          ?>
           {{col("col-12","Cihaz Bilgisi")}} 
-            <select name="" onchange="location.href='?imei='+$(this).val()" id="" class="form-control">
-                <option value="">Tüm Cihazlar</option>
-                <?php foreach($cihazlar AS $c)  { 
-                  ?>
-                 <option value="{{$c->imei}}" <?php if(getesit("imei",$c->imei)) echo "selected"; ?>>{{$c->title}} {{$c->imei}} ({{zf($c->online)}})</option> 
-                 <?php } ?>
-            </select>
+          <div class="row">
+            <div class="col-md-6">
+                <select name="" onchange="location.href='?imei='+$(this).val()" id="" class="form-control">
+                    <option value="">Cihaz seçiniz</option>
+                    <?php foreach($cihazlar AS $c)  { 
+                    ?>
+                    <option value="{{$c->imei}}" <?php if(getesit("imei",$c->imei)) echo "selected"; ?>>{{$c->title}} {{$c->imei}} ({{zf($c->online)}})</option> 
+                    <?php } ?>
+                </select>
+            </div>
+            <?php if(getisset("imei"))  { 
+              ?>
+             <div class="col-md-6">
+                 <div class="btn btn-info "
+                 id="tumunu-guncelle"
+                 ><i class="fa fa-refresh"></i> Tümünü Güncelle</div>
+                 <script>
+                     $(function(){
+                         $("#tumunu-guncelle").on("click", function(){
+                             var bu = $(this);
+                             var html = bu.html();
+                             bu.html("Güncelleniyor...");
+ 
+                             $('#tumunu-guncelle-modal').modal({
+                                 backdrop: 'static', 
+                                 keyboard: false
+                             });
+                               
+                             $.getJSON('?ajax=tumunu-guncelle',{
+                                 imei : "{{get("imei")}}"
+                             },function(d){
+                                 bu.html(html);
+                                 location.reload();
+                                 console.log(d);
+                             })
+                         });
+                     });
+                 </script>
+ 
+             </div> 
+             <?php } ?>
+          </div>
+                
+
+
+            
           {{_col()}}
-         <?php 
-        foreach($komutlar AS $c)  { 
-            $lastValue = $c->sonuc;
-            $imei = $c->imei;
+          <?php if(getisset("imei"))  { 
+            ?>
+          <?php 
+          $digitalInputs = [];
+         foreach($komutlar AS $c)  { 
+             $lastValue = $c->sonuc;
+             $imei = $c->imei;
+ 
+             $commandClass = "command" . strtolower(str_replace(" ","",$c->json));
+          ?>
+          <?php 
+if($c->alt_type=="") {
+    $type = "read";
+} else {
+    $type = $c->alt_type;
+}
 
-            $commandClass = "command" . strtolower(str_replace(" ","",$c->json));
-         ?>
-         {{col("col-md-4 col-12 widget {$c->alt_type}-widget text-center widget-".$c->id . " $commandClass", $c->title)}} 
-        <?php if($c->alt_type=="read" || $c->alt_type=="") { ?>
-            <div class="btn btn-primary d-none  widget-guncelle" 
-                data-imei="{{$c->imei}}" 
-                data-command="{{$c->json}}" 
-                data-id="{{$c->id}}" 
-                data-maks="{{$c->maks}}" 
-                data-mask="{{$c->mask}}" 
-                data-bas="{{$c->bas}}" 
-                data-son="{{$c->son}}" 
-                
-                
-                style="position: absolute;
-    right: 25px;
-    top: 10px;"><i class="fa fa-refresh"></i></div>
-        <?php } ?>
-        <div class="bag d-none">{{$c->bag}}</div>
-         <?php $c2 = $c; ?>
-            @include("admin.inc.widget")
-                
-                
+if($type=="digital-input") {
+    $digitalInputs[] = $c;
+}
+ ?>
+    @if(View::exists("admin.inc.widget.$type"))
+            {{col("col-md-4 col-12 widget order-2 {$c->alt_type}-widget text-center widget-".$c->id . " $commandClass", $c->title)}} 
+           
+            <?php if($c->alt_type=="read" || $c->alt_type=="") { ?>
+                    <div class="btn btn-primary  widget-guncelle" 
+                        data-imei="{{$c->imei}}" 
+                        data-command="{{$c->json}}" 
+                        data-id="{{$c->id}}" 
+                        data-maks="{{$c->maks}}" 
+                        data-mask="{{$c->mask}}" 
+                        data-bas="{{$c->bas}}" 
+                        data-son="{{$c->son}}" 
+                        
+                        
+                        style="position: absolute;
+                        right: 25px;
+                        z-index:1000;
+                        top: 10px;"><i class="fa fa-refresh"></i></div>
+            <?php } ?>
 
-         {{_col()}} 
-         <?php } ?>
+            <div class="bag d-none">{{$c->bag}}</div>
+            <?php $c2 = $c; ?>
+            @include("admin.inc.widget.$type")
+            {{_col()}} 
+    @endif
+
+          <?php } ?> 
+          <?php if(count($digitalInputs)>0) {
+             ?>
+             @include("admin.inc.widget.digital-inputs")
+             <?php 
+          } ?>
+           <?php } else {
+             ?>
+                <?php foreach($cihazlar AS $y) {
+                ?>
+
+                
+                    <div class="col-12 col-md-4 col-xl-4">
+                        <a class="block block-link-shadow text-center" href="?imei={{$y->imei}}">
+
+                            <div class="block-content block-sticky-options">
+                                <div class="block-options">
+                                    <?php $durum = strtotime(date("Y-m-d H:i:s")) - strtotime($y->online);
+                                    if($durum<500)  {  ?>
+                                     <i title="Cihaz şu an aktif" class="si si-globe fa-2x text-success"></i> 
+                                     <?php } ?>
+                                </div>
+                                <p class="mt-5">
+                                    <i class="fa fa-wifi fa-4x text-info"></i> <br>
+                                    <small>{{zf($y->online)}}</small>
+                                </p>
+
+                               
+                            </div>
+                            <div class="block-content bg-body-light">
+                               
+                                <p class="font-w600">{{$y->title}} {{$y->imei}}</p>
+                            </div>
+                        </a>
+                    </div>
+                <?php 
+                } ?>
+             <?php  
+           } ?>
     </div>
 </div>
 

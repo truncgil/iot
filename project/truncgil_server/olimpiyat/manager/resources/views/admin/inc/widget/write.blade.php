@@ -5,6 +5,7 @@ $(function(){
         $('#sonuc{{$c2->id}}').html('Komut gönderiliyor...');
         $.get('https://app.olimpiyat.com.tr/client.php',{
             'imei' : '{{$c2->imei}}',
+            '_' : $.now(),
             'command' : '{{$c2->json}}'
         }).done(function(d){
             if(d.trim()!=30) {

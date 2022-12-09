@@ -272,9 +272,9 @@ if(getisset("ajax")) {
                         <div class="btn btn-success " onclick="ExportToExcel('xlsx')"><i class="fa fa-file-excel"></i> {{e2("Excel'e Aktar")}}</div> 
                      </div>
                      <?php } ?>
-                    <div class="btn-group hide-mobile" role="group">
+                    <div class="btn-group hide-mobile " role="group">
                    
-                        <button type="button" class="btn btn-rounded btn-dual-secondary" id="language-dropdown"
+                        <button type="button" class="d-none btn btn-rounded btn-dual-secondary" id="language-dropdown"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-user d-sm-none"></i>
                             <span class="d-none d-sm-inline-block">{{e2(App::getLocale())}}</span>

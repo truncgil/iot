@@ -5,7 +5,10 @@ $(function(){
     var text = $("#modal{{$c2->id}} .text").html();
    $('#onoff{{$c2->id}}').on("click",function(){
         //$('#sonuc{{$c2->id}}').html('Komut gönderiliyor...');
-        $("#modal{{$c2->id}}").modal();
+        $("#modal{{$c2->id}}").modal({
+                                 backdrop: 'static', 
+                                 keyboard: false
+                             });
         if($(this).is(":checked")) {
             $("#modal{{$c2->id}} .type").html("Aç");
         } else {
@@ -52,6 +55,7 @@ $(function(){
             }
             $.get('https://app.olimpiyat.com.tr/client.php',{
                 'imei' : '{{$c2->imei}}',
+                '_' : $.now(),
                 'command' : sendCommand
             }).done(function(d){
                 if(d.trim()!=30) {
@@ -123,7 +127,7 @@ $(function(){
 <div class="text-center">{{$c2->title}}</div>
     </div>
 </div>
-    <div id="sonuc{{$c2->id}}"></div>
+    <div id="sonuc{{$c2->id}}" class="d-none"></div>
 
     <div class="modal" id="modal{{$c2->id}}">
   <div class="modal-dialog">
