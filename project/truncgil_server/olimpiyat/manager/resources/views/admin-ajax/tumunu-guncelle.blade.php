@@ -2,7 +2,7 @@
 
 $db = db("contents")->where("type","Komut İstemi")
 ->where("imei",get("imei"))
-->where("alt_type","read")
+->whereIn("alt_type",['read', 'digital-input'])
 ->get();
 $dizi = [];
 foreach($db AS $d) {
@@ -17,6 +17,13 @@ foreach($db AS $d) {
     ];
     $return =  httpClient("http://app.olimpiyat.com.tr/client.php",$data);
     $dizi[$d->id]['sonuc'] = $return;
+    $hex = substr(trim($return),$d->bas,$d->son - $d->bas);
+ //   dump($d->title);
+ //   dump($hex);
+    $decimal = intval($hex,16);
+ //   dump($decimal);
+    $dizi[$d->id]['decimal'] = $decimal;
+
      
     $_GET['imei'] = $d->imei;
     $_GET['command'] = $d->json;

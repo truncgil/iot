@@ -3,7 +3,7 @@
 
     $fp = stream_socket_client("tcp://185.149.103.78:5000", $errno, $errstr);
     if (!$fp) {
-        echo "HATA: $errno - $errstr<br />\n";
+    echo "HATA: $errno - $errstr<br />\n";
     } else {
     
             $length = 14;
@@ -18,7 +18,8 @@
             } catch (\Throwable $th) {
                 //throw $th;
             }
-            
+
+            usleep(500);
             
         
             

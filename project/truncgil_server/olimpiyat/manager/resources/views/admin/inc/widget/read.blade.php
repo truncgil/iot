@@ -7,13 +7,15 @@ if(!isset($lastValue)) {
 <div id="container{{$c2->id}}" class="truncgil-gauge" style="width: 100%;height:250px;"></div>
 
 <script type="text/javascript">
-var decimal = (Math.round(parseInt(
-                    "{{$lastValue}}"
+var lastValue = "{{$lastValue}}"
                     .trim()
                     .substring(
                             {{$c2->bas}}, 
                             {{$c2->son}}
-                        ), 
+                        );
+                        console.log("lastValue="+lastValue);
+var decimal = (Math.round(parseInt(
+                    lastValue, 
                     16
                 )) / {{$c2->mask}} ).toFixed(2);
 //console.log(decimal);

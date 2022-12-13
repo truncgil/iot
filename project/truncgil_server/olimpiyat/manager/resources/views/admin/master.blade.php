@@ -267,7 +267,7 @@ if(getisset("ajax")) {
                 <div class="content-header-section sag-menu">
                 <?php if(u()->level=="Admin")  { 
                      ?>
-                     <div class="btn-group hide-mobile">
+                     <div class="btn-group hide-mobile d-none">
                         <div class="btn btn-info " onclick="window.print()"><i class="fa fa-print"></i> {{e2("Yazdır")}}</div>
                         <div class="btn btn-success " onclick="ExportToExcel('xlsx')"><i class="fa fa-file-excel"></i> {{e2("Excel'e Aktar")}}</div> 
                      </div>
