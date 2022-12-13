@@ -47,7 +47,10 @@
              <div class="col-md-6">
                  <div class="btn btn-info "
                  id="tumunu-guncelle"
-                 ><i class="fa fa-refresh"></i> Tümünü Güncelle</div>
+                 ><i class="fa fa-refresh"></i> Göstergeleri Güncelle</div>
+                 <div class="btn btn-warning "
+                 id="digital-inputs-guncelle"
+                 ><i class="fa fa-refresh"></i> Digital Inputları Güncelle</div>
                  <script>
                      $(function(){
                          $("#tumunu-guncelle").on("click", function(){
@@ -61,6 +64,24 @@
                              });
                                
                              $.getJSON('?ajax=tumunu-guncelle',{
+                                 imei : "{{get("imei")}}"
+                             },function(d){
+                                 bu.html(html);
+                                 location.reload();
+                                 console.log(d);
+                             })
+                         });
+                         $("#digital-inputs-guncelle").on("click", function(){
+                             var bu = $(this);
+                             var html = bu.html();
+                             bu.html("Güncelleniyor...");
+ 
+                             $('#tumunu-guncelle-modal').modal({
+                                 backdrop: 'static', 
+                                 keyboard: false
+                             });
+                               
+                             $.getJSON('?ajax=digital-inputs-guncelle',{
                                  imei : "{{get("imei")}}"
                              },function(d){
                                  bu.html(html);

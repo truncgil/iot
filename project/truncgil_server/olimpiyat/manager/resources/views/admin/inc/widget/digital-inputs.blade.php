@@ -7,7 +7,9 @@
               $value = intval($value, 16); 
            ?>
          <td class="<?php if($value!=0) echo "bg-success";
-         else echo "bg-danger" ?> text-white">{{$i->title}}
+         else echo "bg-danger" ?> text-white" title="{{$value}}">{{$i->title}}
+         <br>
+         
         </td> 
          <?php } ?>
     </tr>

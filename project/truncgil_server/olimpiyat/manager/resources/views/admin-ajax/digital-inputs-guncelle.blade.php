@@ -2,7 +2,7 @@
 
 $db = db("contents")->where("type","Komut İstemi")
 ->where("imei",get("imei"))
-->whereIn("alt_type",['read'])
+->whereIn("alt_type",['digital-input'])
 ->get();
 $dizi = [];
 foreach($db AS $d) {
@@ -19,9 +19,9 @@ foreach($db AS $d) {
     $dizi[$d->id]['sonuc'] = $return;
     $hex = substr(trim($return),$d->bas,$d->son - $d->bas);
  //   dump($d->title);
- //   dump($hex);
+   // dump($hex);
     $decimal = intval($hex,16);
- //   dump($decimal);
+  //  dump($decimal);
     $dizi[$d->id]['decimal'] = $decimal;
 
      

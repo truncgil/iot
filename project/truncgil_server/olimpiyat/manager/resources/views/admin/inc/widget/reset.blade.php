@@ -122,7 +122,7 @@ $(function(){
         <p>{{$c2->title}}</p>
     </div>
 </div>
-    <div id="sonuc{{$c2->id}}"></div>
+    <div id="sonuc{{$c2->id}}" class="d-none"></div>
 
     <div class="modal" id="modal{{$c2->id}}">
   <div class="modal-dialog">
