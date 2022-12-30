@@ -31,13 +31,14 @@
 	} else {
 		$users = db("users")->orderBy("id","DESC");
 
-		if($u->level!="Admin" || $u->level!="Teknik Destek") {
+		if($u->level!="Admin" ) {
 		//	$users = $users->where("uid",u()->id);
+			$root_alias = root_alias();
+			if(!in_array($u->alias,$root_alias)) {
+				$users = $users->whereIn("id",$u->alias_ids);
+			}
 		}
-		$root_alias = root_alias();
-		if(!in_array($u->alias,$root_alias)) {
-			$users = $users->whereIn("id",$u->alias_ids);
-		}
+		
 		if(getisset("level")) {
 			if(!getesit("level","")) {
 				$users = $users->where("level",get("level"));
