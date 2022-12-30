@@ -5,7 +5,16 @@ $alt = $alt->whereIn("imei",$yetkilerim);
 if(!getesit("imei","")) {
 	$alt = $alt->where("imei",get("imei"));
 }
-$alt = $alt->simplePaginate(20); ?>
+if(getisset("delete")) {
+	db("komut_istemi")
+		->whereIn("imei",$yetkilerim)
+		->where("id",get("delete"))
+		->delete();
+	bilgi("Komut başarıyla silinmiştir.");
+}
+$alt = $alt
+->orderBy("id","DESC")
+->simplePaginate(20); ?>
             {{$alt->appends($_GET)->links()}}
 				<select name="" onchange="location.href='?imei='+$(this).val()" id="" class="form-control">
 					<option value="">Tüm Cihazların Komutları</option>
@@ -103,8 +112,8 @@ $alt = $alt->simplePaginate(20); ?>
 						
 					  <td class="text-center">
                             <div class="btn-group">
-                                <a href="?duzenle={{$a->id}}" class="btn btn-primary"><i class="fa fa-pen"></i></a>
-                                <a href="{{ url('admin/komut_istemi/'. $a->slug .'/delete') }}" teyit="{{$a->title}} {{__('içeriğini silmek istediğinizden emin misiniz?')}}" title="{{$a->title}} {{__('Silinecek!')}}" class=" btn  btn-secondary js-tooltip-enabled" data-toggle="tooltip" title="" data-original-title="Delete">
+                                <a href="?duzenle={{$a->id}}{{getisset("imei") ? "&imei=".get("imei") : ""}}" class="btn btn-primary"><i class="fa fa-pen"></i></a>
+                                <a href="?delete={{$a->id}}{{getisset("imei") ? "&imei=".get("imei") : ""}}" teyit="{{$a->title}} {{__('komutunu silmek istediğinizden emin misiniz?')}}" title="{{$a->title}} {{__('Silinecek!')}}" class=" btn  btn-secondary js-tooltip-enabled" data-toggle="tooltip" title="" data-original-title="Delete">
                                     <i class="fa fa-times"></i>
                                 </a>
                             </div>
