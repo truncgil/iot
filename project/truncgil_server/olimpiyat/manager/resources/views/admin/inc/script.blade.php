@@ -129,8 +129,13 @@ $(".ckeditor").each(function(){
 			$("#iotModal").modal();
 			$("#iotModal .text").html(text);
 		}
+		var calistir = true;
 		$(".widget-guncelle").on("click",function(){
+			if(calistir) {
+				calistir = false;
+			//	$(".widget-guncelle").hide();
 			var bu = $(this);
+			bu.show();
 			var command = $(this).attr("data-command");
 			var imei = $(this).attr("data-imei");
 			var bas = $(this).attr("data-bas");
@@ -149,6 +154,8 @@ $(".ckeditor").each(function(){
 					'_' :  $.now(),
                     'command' : command
                 }).done(function(d){
+					calistir = true;
+					$(".widget-guncelle").show();
 					console.log(d);
                     bu.find("i").removeClass("fa-spin");
                     if(d.trim()==30) {
@@ -240,6 +247,8 @@ $(".ckeditor").each(function(){
 					 
                 }).fail(function(){
                 });
+			}
+			
 		});
 		$(".window").on("click",function(){
 			var url = $(this).attr("href");

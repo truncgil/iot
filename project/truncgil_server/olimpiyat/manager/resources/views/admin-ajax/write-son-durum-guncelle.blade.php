@@ -1,10 +1,5 @@
 <?php 
-
-$except = ['2d31','30'];
-
-if(in_array(get("sonuc"),$except)) {
-
-    db("komut_istemi")
+echo db("komut_istemi")
     ->where("imei",get("imei"))
     ->where("json",get("command"))
     ->update(
@@ -13,7 +8,4 @@ if(in_array(get("sonuc"),$except)) {
                 'sonuc_date' => simdi()
             ]
         );
-        
-}
-
  ?>

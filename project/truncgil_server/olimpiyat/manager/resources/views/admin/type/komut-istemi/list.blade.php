@@ -1,5 +1,20 @@
 @include("admin.inc.table-search")
+<?php $alt = db("komut_istemi");
+$yetkilerim = cihaz_yetkilerim();
+$alt = $alt->whereIn("imei",$yetkilerim);
+if(!getesit("imei","")) {
+	$alt = $alt->where("imei",get("imei"));
+}
+$alt = $alt->simplePaginate(20); ?>
             {{$alt->appends($_GET)->links()}}
+				<select name="" onchange="location.href='?imei='+$(this).val()" id="" class="form-control">
+					<option value="">Tüm Cihazların Komutları</option>
+					<?php foreach($yetkilerim AS $y)  { 
+					  ?>
+ 					<option value="{{$y}}" {{(getesit("imei",$y)) ? "selected" : ""}}>{{$y}}</option> 
+					 <?php } ?>
+				</select>
+			
 			<div class="table-responsive">
             <table class="table table-striped table-hover table-bordered table-vcenter">
                 <thead>
@@ -40,26 +55,26 @@
 							<input type="hidden" name="slug" value="{{$a->slug}}" />
 							{{csrf_field()}}
 						</form>
-                            <input type="text" name="title" placeholder="Başlık" value="{{$a->title}}" table="contents" id="{{$a->id}}" class="title{{$a->id}} form-control edit" />
-                            <textarea name="html" placeholder="Açıklama" value="{{$a->html}}" table="contents" id="{{$a->id}}" class="html{{$a->id}} form-control edit" cols="30" rows="2" class="form-control">{{$a->html}}</textarea>
+                            <input type="text" name="title" placeholder="Başlık" value="{{$a->title}}" table="komut_istemi" id="{{$a->id}}" class="title{{$a->id}} form-control edit" />
+                            <textarea name="html" placeholder="Açıklama" value="{{$a->html}}" table="komut_istemi" id="{{$a->id}}" class="html{{$a->id}} form-control edit" cols="30" rows="2" class="form-control">{{$a->html}}</textarea>
 						</th>
                         <td>
-                            <input type="text" name="imei" value="{{$a->imei}}" table="contents" id="{{$a->id}}" placeholder="IMEI buraya giriniz" class="imei{{$a->id}} form-control edit" />
+                            <input type="text" name="imei" value="{{$a->imei}}" table="komut_istemi" id="{{$a->id}}" placeholder="IMEI buraya giriniz" class="imei{{$a->id}} form-control edit" />
 
-							<input type="text" name="mask" value="{{$a->mask}}" table="contents" id="{{$a->id}}" placeholder="Bölüm maskını buraya giriniz" class="mask{{$a->id}} form-control edit" />
+							<input type="text" name="mask" value="{{$a->mask}}" table="komut_istemi" id="{{$a->id}}" placeholder="Bölüm maskını buraya giriniz" class="mask{{$a->id}} form-control edit" />
 
-							<input type="text" name="birim" value="{{$a->birim}}" table="contents" id="{{$a->id}}" placeholder="Birimi buraya giriniz" class="imei{{$a->id}} form-control edit" />
+							<input type="text" name="birim" value="{{$a->birim}}" table="komut_istemi" id="{{$a->id}}" placeholder="Birimi buraya giriniz" class="imei{{$a->id}} form-control edit" />
 						</td>
 
                         <td>
-                            <textarea  name="json" value="{{$a->json}}" table="contents" id="{{$a->id}}" placeholder="Komutu buraya giriniz" class="json{{$a->id}} form-control edit" >{{$a->json}}</textarea>
+                            <textarea  name="json" value="{{$a->json}}" table="komut_istemi" id="{{$a->id}}" placeholder="Komutu buraya giriniz" class="json{{$a->id}} form-control edit" >{{$a->json}}</textarea>
                             <div class="btn btn-info send" data-id="{{$a->id}}"><i class="fa fa-refresh"></i> Test Et</div>
                             <br>
                             <div class="badge badge-danger" id="sonuc{{$a->id}}"></div>
                             <div class="badge badge-success" id="decimal{{$a->id}}"></div>
 						</td>
                         <td>
-                            <input type="text" name="alt_type" value="{{$a->alt_type}}" table="contents" id="{{$a->id}}" class="alt_type{{$a->id}} form-control edit" />
+                            <input type="text" name="alt_type" value="{{$a->alt_type}}" table="komut_istemi" id="{{$a->id}}" class="alt_type{{$a->id}} form-control edit" />
 						</td>
 						<!--
                         <td class="d-none">
@@ -69,17 +84,17 @@
 										$('.slug{{$a->id}}').val(d).blur();
 									})"><i class="si si-refresh"></i></div>
 								</div>
-								<input type="text" name="slug" value="{{$a->slug}}" table="contents" id="{{$a->id}}" class="slug{{$a->id}} form-control edit" />
+								<input type="text" name="slug" value="{{$a->slug}}" table="komut_istemi" id="{{$a->id}}" class="slug{{$a->id}} form-control edit" />
 							</div>
 							
 						</td>
                         -->
                         <td>
-                            <input type="number" name="s" value="{{$a->s}}" table="contents" id="{{$a->id}}" class="form-control edit" />
+                            <input type="number" name="s" value="{{$a->s}}" table="komut_istemi" id="{{$a->id}}" class="form-control edit" />
                         </td>
                        
 						<td>
-							<select name="y" id="{{$a->id}}" class=" form-control edit" table="contents" >
+							<select name="y" id="{{$a->id}}" class=" form-control edit" table="komut_istemi" >
 								<option value="0" @if($a->y==0) selected @endif>{{__("Aktif Değil")}}</option>
 								<option value="1" @if($a->y==1) selected @endif>{{__("Aktif")}}</option>
 							</select>
@@ -89,7 +104,7 @@
 					  <td class="text-center">
                             <div class="btn-group">
                                 <a href="?duzenle={{$a->id}}" class="btn btn-primary"><i class="fa fa-pen"></i></a>
-                                <a href="{{ url('admin/contents/'. $a->slug .'/delete') }}" teyit="{{$a->title}} {{__('içeriğini silmek istediğinizden emin misiniz?')}}" title="{{$a->title}} {{__('Silinecek!')}}" class=" btn  btn-secondary js-tooltip-enabled" data-toggle="tooltip" title="" data-original-title="Delete">
+                                <a href="{{ url('admin/komut_istemi/'. $a->slug .'/delete') }}" teyit="{{$a->title}} {{__('içeriğini silmek istediğinizden emin misiniz?')}}" title="{{$a->title}} {{__('Silinecek!')}}" class=" btn  btn-secondary js-tooltip-enabled" data-toggle="tooltip" title="" data-original-title="Delete">
                                     <i class="fa fa-times"></i>
                                 </a>
                             </div>

@@ -21,8 +21,8 @@
         $cihazlar = db("cihazlar")->whereIn("imei",$yetkilerim)
         ->orderBy("online","DESC")
         ->get();
-        $komutlar = db("contents")
-            ->where("type","Komut İstemi")
+        $komutlar = db("komut_istemi")
+            
             ->where("y",1)
             ->whereIn("imei",$yetkilerim);
         if(!getesit("imei","")) {
@@ -44,13 +44,23 @@
             </div>
             <?php if(getisset("imei"))  { 
               ?>
-             <div class="col-md-6">
-                 <div class="btn btn-info "
-                 id="tumunu-guncelle"
-                 ><i class="fa fa-refresh"></i> Göstergeleri Güncelle</div>
-                 <div class="btn btn-warning "
-                 id="digital-inputs-guncelle"
-                 ><i class="fa fa-refresh"></i> Digital Inputları Güncelle</div>
+                <div class="col-12 col-xl-6 col-centered">
+                    <div class="btn-group btn-block ">
+                        <div 
+                            class="btn  btn-info "
+                            id="tumunu-guncelle"
+                        >
+                            <i class="fa fa-refresh"></i> Göstergeleri Güncelle
+                        </div>
+                        <div 
+                            class="btn btn-warning "
+                            id="digital-inputs-guncelle"
+                            >
+                            <i class="fa fa-refresh"></i> 
+                            Digital Inputları Güncelle
+                        </div>
+                    </div>
+                </div>
                  <script>
                      $(function(){
                          $("#tumunu-guncelle").on("click", function(){
@@ -92,7 +102,7 @@
                      });
                  </script>
  
-             </div> 
+              
              <?php } ?>
           </div>
                 
@@ -125,7 +135,7 @@ if($type=="digital-input") {
             {{col("col-md-4 col-12 widget order-2 {$c->alt_type}-widget text-center widget-".$c->id . " $commandClass", $c->title)}} 
            
             <?php if($c->alt_type=="read" || $c->alt_type=="") { ?>
-                    <div class="btn btn-primary  widget-guncelle" 
+                    <div class="btn btn-default  widget-guncelle" 
                         data-imei="{{$c->imei}}" 
                         data-command="{{$c->json}}" 
                         data-id="{{$c->id}}" 

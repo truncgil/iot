@@ -1,4 +1,5 @@
 <form action="?duzenle={{get("duzenle")}}&guncelle" id="Form" method="post">
+
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
@@ -56,7 +57,7 @@
                                 <select name="bag" id="" class="form-control">
                                     <option value="">Seçiniz</option>
                                     <?php 
-                                    $komutlar = db("contents")
+                                    $komutlar = db("komut_istemi")
                                         ->where("imei",$c2->imei)
                                             ->where("alt_type","write")
                                             ->where("id","<>",$c2->id)

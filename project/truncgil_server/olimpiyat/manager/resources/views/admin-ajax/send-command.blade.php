@@ -1,6 +1,7 @@
 <?php 
 
-$db = db("contents")->where("type","Komut İstemi")
+$db = db("komut_istemi")
+//->where("type","Komut İstemi")
 ->where("imei",get("imei"))
 ->where("alt_type","read")
 ->get();

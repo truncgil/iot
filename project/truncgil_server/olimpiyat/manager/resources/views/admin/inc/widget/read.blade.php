@@ -25,9 +25,9 @@ var decimal = (Math.round(parseInt(
                     <?php if($c2->mask!="")  { 
                       ?>
                         var maskingDecimal = "{{$c2->mask}}".replace(/#/g, _ => v[i++]);
-                        $("#decimal{{$c2->id}}").html(maskingDecimal); 
+                    //    $("#decimal{{$c2->id}}").html(maskingDecimal); 
                      <?php } ?>
-                //    console.log(maskingDecimal);
+                    console.log(maskingDecimal);
    var dom = document.getElementById('container{{$c2->id}}');
    var myChart{{$c2->id}} = echarts.init(dom, null, {
      renderer: 'canvas',

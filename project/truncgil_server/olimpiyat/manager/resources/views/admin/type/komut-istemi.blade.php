@@ -7,15 +7,18 @@
         ?>
         {{col("col-12","{$c->title} Düzenle")}} 
             <?php 
+
             if(getisset("guncelle")) {
                 $post = $_POST;
                 unset($post['_token']);
-                db("contents")->where("id",get("duzenle"))
+                db("komut_istemi")->where("id",get("duzenle"))
                 ->update($post);
                 bilgi("Bilgiler başarılı bir şekilde güncellenmiştir");
                 yonlendir("?duzenle={$_GET['duzenle']}");
             }
-            $c2 = c(get("duzenle"));
+            
+            $c2 = komut_istemi(get("duzenle"));
+
             ?>
             <script>
                 $(function(){
