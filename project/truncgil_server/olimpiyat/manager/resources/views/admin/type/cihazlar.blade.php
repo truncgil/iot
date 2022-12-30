@@ -1,4 +1,51 @@
+<?php 
+$u = u();
+if(getisset("add")) {
+    try {
+        if(post("imei")==12) {
+            ekle(
+                [
+                    'imei' =>post("imei"),
+                    'alias' => $u->alias
+                ]
+            , "yetkiler");
+
+            ekle(
+                [
+                    'imei' => post("imei")
+                ]
+            , "cihazlar");
+        }
+        
+    } catch (\Throwable $th) {
+        //throw $th;
+        dump($th);
+    }
+
+    
+}
+
+if(getisset("delete")) {
+    $yetkilerim = cihaz_yetkilerim(); 
+    db("yetkiler")->whereIn("imei",$yetkilerim)->where("imei",get("delete"))->delete();
+    db("cihazlar")->whereIn("imei",$yetkilerim)->where("imei",get("delete"))->delete();
+}
+
+$yetkilerim = cihaz_yetkilerim(); ?>
 <div class="content">
+    <div class="row">
+         {{col("col-12","Yeni Cihaz Kaydı")}} 
+            <form action="?add" method="post">
+                @csrf
+                IMEI (12 Haneli):
+                <input type="text" name="imei" required id="" class="form-control">
+                <button class="btn btn-primary mt-5">Cihaz Ekle</button>
+
+
+            </form>
+          
+         {{_col()}}
+    </div>
     <div class="block">
             <div class="block-header block-header-default">
                 <h3 class="block-title"><i class="fa fa-{{$c->icon}}"></i> {{e2($c->title)}}</h3>
@@ -92,6 +139,7 @@
                     
                      <?php 
                 } ?>
+                
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover table-striped">
                         <tr>
@@ -100,7 +148,9 @@
                             <th>Son bağlantı</th>
                             <th>İşlem</th>
                         </tr>
-                        <?php $cihazlar = db("cihazlar")->orderBy("online","DESC")->get();
+                        <?php $cihazlar = db("cihazlar");
+                        
+                        $cihazlar = $cihazlar->whereIn("imei",$yetkilerim)->orderBy("online","DESC")->get();
                         foreach($cihazlar AS $c)  { 
                          
                          ?>
@@ -115,6 +165,7 @@
                              <td>
                                 <a href="?alias&imei={{$c->imei}}" class="btn btn-primary"><i class="fa fa-globe"></i> Etki Alanları</a>
                                 <a href="?logs&imei={{$c->imei}}" class="btn btn-info"><i class="fa fa-code"></i> Loglar</a>
+                                <a href="?delete={{$c->imei}}" teyit="Bu cihazı sistemden kaldırmak istediğinizden emin misiniz?" class="btn btn-danger"><i class="fa fa-times"></i> Sil</a>
                              </td>
                          </tr> 
                          <?php } ?>
