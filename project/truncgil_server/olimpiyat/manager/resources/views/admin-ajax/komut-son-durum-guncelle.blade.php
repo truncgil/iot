@@ -2,7 +2,7 @@
 
 $except = ['2d31','30'];
 
-if(in_array(get("sonuc"),$except)) {
+if(!in_array(get("sonuc"),$except)) {
 
     db("komut_istemi")
     ->where("imei",get("imei"))
