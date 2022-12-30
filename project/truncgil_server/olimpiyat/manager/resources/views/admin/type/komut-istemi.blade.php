@@ -16,7 +16,7 @@
                 bilgi("Bilgiler başarılı bir şekilde güncellenmiştir");
                 yonlendir("?duzenle={$_GET['duzenle']}");
             }
-            
+
             $c2 = komut_istemi(get("duzenle"));
 
             ?>
@@ -46,19 +46,25 @@
         {{_col()}} 
         <?php } ?>
     </div>
+    
 <div class="block">
         <div class="block-header block-header-default">
             <h3 class="block-title"><i class="fa fa-{{$c->icon}}"></i> {{e2($c->title)}} {{__('İçerikleri')}}</h3>
             <div class="block-options">
                 <div class="block-options-item"> 
-                    <a href="{{ url('admin-ajax/content-type-blank-delete?type='. $c->title) }}" teyit="{{__('Tüm boş '.$c->title.'  '._('') )}}" title="{{_('Boş Olan  İçeriklerini Sil')}}" class="btn btn-danger"><i class="fa fa-times"></i> </a>
-                    <a href="{{ url('admin-ajax/content-type-add?type='. $c->title) }}" class="btn btn-success" title="Yeni {{$c->title}} {{_('İçeriği Oluştur')}}"><i class="fa fa-plus"></i> </a>
+                    <a href="?add{{getisset("imei") ? "&imei=".get("imei") : ""}}" class="btn btn-success" title="Yeni Komut İstemi Ekle"><i class="fa fa-plus"></i> </a>
                 </div>
             </div>
         </div>
 		
 
         <div class="block-content">
+            <?php if(getisset("add")) {
+                ekle2([
+                    'imei' => get("imei")
+                ],"komut_istemi");
+                bilgi("Boş komut listeye eklendi. Oradan işlemlere devam edebilirsiniz. ");
+            } ?>
 			@include("admin.type.komut-istemi.list")
         </div>
 		
