@@ -29,6 +29,8 @@
                                     16
                                 );
                                 var random = decimal;//+(Math.random() * 60).toFixed(2);
+                                $("#sonuc"+id).html(d);
+                                $("#decimal"+id).html(decimal);
 
                                 var dom = document.getElementById(gauge);
                                 var myChart = echarts.init(dom, null, {
@@ -54,6 +56,7 @@
                                     }
                                 ]
                                 });
+                                
                                 /*
                             $("#sonuc"+id).html(d);
                             console.log("#decimal"+id);
