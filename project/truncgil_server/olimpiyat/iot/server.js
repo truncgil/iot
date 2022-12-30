@@ -2,7 +2,9 @@ const secret_key = "olimpiyat_truncgil1854sa!";
 var _ = require('lodash');
 var net = require('net');
 const axios = require('axios');
+require('events').EventEmitter.prototype._maxListeners = 0;
 require('./lib/server');
+
 var clients = [];
 
 net.createServer(function(socket) {
@@ -39,6 +41,7 @@ net.createServer(function(socket) {
                                 console.log(return_data);
                                 sendLog(imei, return_data, message);
                                 sonuc = true;
+                              // client.removeAllListeners("connect");
                                // return_data = null;
                             } else {
                             //    console.log("not reply socket destroy");
@@ -189,9 +192,11 @@ net.createServer(function(socket) {
         }
         
     }
+
     var getHash = function(text) {
         return require('crypto').createHash('sha256').update(secret_key+text, 'binary').digest('hex');
     }
+    
     var setIMEI = function(imei) {
         let hash = require('crypto').createHash('sha256').update(secret_key+imei, 'binary').digest('hex');
         let url = encodeURI('https://app.olimpiyat.com.tr/manager/iot-connect?imei='+imei+'&hash='+hash);
@@ -199,7 +204,8 @@ net.createServer(function(socket) {
         
         //console.log("cihaz sayisi=" + clients.length);
       //  console.log(imei.length);
-        if (imei.toString().trim() !== '') {
+        imei = imei.toString().trim();
+        if (imei !== '') {
 
             if(imei.length==12) {
                 clients[imei] = socket;
@@ -246,6 +252,9 @@ net.createServer(function(socket) {
                 
     
                 return true;
+            } else {
+                socket.write(imei + " " + imei.length +" IMEI error");
+                return false;
             }
             
         } else {
