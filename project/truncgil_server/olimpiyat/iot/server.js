@@ -208,46 +208,54 @@ net.createServer(function(socket) {
         if (imei !== '') {
 
             if(imei.length==12) {
-                clients[imei] = socket;
-                //socket.imei = imei;
-                    axios
-                        .get(url)
-                        .then(res => {
-                          //  console.log(`statusCode: ${res.status}`);
-                          try {
-                            var data = res.data;
-                            console.log(data);
-                            if(Array.isArray(data)) {
-                                console.log("stand up data sending...");
+                try {
+                    clients[imei].close();
+                } catch (error) {
+                    
+                }
+                setTimeout(function() {
+                    clients[imei] = socket;
+                    //socket.imei = imei;
+                        axios
+                            .get(url)
+                            .then(res => {
+                              //  console.log(`statusCode: ${res.status}`);
+                              try {
+                                var data = res.data;
                                 console.log(data);
-                                let k = 0;
-                                data.forEach(function(command, i, a){
-
-                                    console.log(command);
-                                    setTimeout(function(){
-                                        console.log("send " + command);
-                                        command = command.replace(/\s/g, '');
-                                        var buffer = new Buffer.from(command,'hex');
-                                        socket.write(buffer);
-                                        socket.on('data' ,function(return_data){
-                                            console.log("return " + return_data.toString('hex'));
-                                        });
-                                      //  broadcast('{"imei":"' + imei + '","command":"' + command + '"}');
-                                    }, 1000*k);
-                                    k++;
-                                });
-                            }
-                            
-                          } catch (error) {
-                            
-                          }
-                            
+                                if(Array.isArray(data)) {
+                                    console.log("stand up data sending...");
+                                    console.log(data);
+                                    let k = 0;
+                                    data.forEach(function(command, i, a){
     
-                           console.log("device connected send from axios =>" + imei );
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        });
+                                        console.log(command);
+                                        setTimeout(function(){
+                                            console.log("send " + command);
+                                            command = command.replace(/\s/g, '');
+                                            var buffer = new Buffer.from(command,'hex');
+                                            socket.write(buffer);
+                                            socket.on('data' ,function(return_data){
+                                                console.log("return " + return_data.toString('hex'));
+                                            });
+                                          //  broadcast('{"imei":"' + imei + '","command":"' + command + '"}');
+                                        }, 1000*k);
+                                        k++;
+                                    });
+                                }
+                                
+                              } catch (error) {
+                                
+                              }
+                                
+        
+                               console.log("device connected send from axios =>" + imei );
+                            })
+                            .catch(error => {
+                                console.error(error);
+                            });
+                },1000);
+                
     
                 
     
