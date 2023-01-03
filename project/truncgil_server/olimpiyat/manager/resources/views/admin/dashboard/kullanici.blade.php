@@ -63,6 +63,18 @@
                 </div>
                  <script>
                      $(function(){
+                        $.get("?ajax=is-online",{
+                            imei : "{{get("imei")}}",
+                            command : "0"
+                        }, function(d){
+                            if(d.trim()=="30") {
+                                $("#tumunu-guncelle").hide();
+                                $("#digital-inputs-guncelle").hide();
+                            } else {
+                                $("#tumunu-guncelle").show();
+                                $("#digital-inputs-guncelle").show();
+                            }
+                        });
                          $("#tumunu-guncelle").on("click", function(){
                              var bu = $(this);
                              var html = bu.html();
@@ -94,10 +106,11 @@
                              $.getJSON('?ajax=digital-inputs-guncelle',{
                                  imei : "{{get("imei")}}"
                              },function(d){
+                               
                                  bu.html(html);
                                  location.reload();
                                  console.log(d);
-                             })
+                             });
                          });
                      });
                  </script>

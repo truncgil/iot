@@ -178,7 +178,13 @@ $(".ckeditor").each(function(){
                                                 son
                                             ), 
                                         16
-                                    ) / mask;
+                                    );
+							$.get("?ajax=komut-son-durum-guncelle",{
+								imei : imei,
+								command : command,
+								sonuc : d.trim() 
+							});
+							decimal =  decimal / mask;
 							console.log(command + " : " + d + " : " + decimal);
 							var random = decimal;//+(Math.random() * 60).toFixed(2);
 

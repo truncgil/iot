@@ -92,6 +92,7 @@
                         </div>
 
                         <hr>
+                        <?php //dump($c2) ?>
                         <div class="row">
                             <div class="col-md-6">
                                 Hex Sonuç
