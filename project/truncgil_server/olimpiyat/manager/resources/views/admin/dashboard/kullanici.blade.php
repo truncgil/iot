@@ -33,7 +33,10 @@
          ?>
           {{col("col-12","Cihaz Bilgisi")}} 
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-2">
+                <div class="btn btn btn-secondary is-online btn-block"><i class="fa fa-spin fa-spinner"></i></div>
+            </div>
+            <div class="col-md-4">
                 <select name="" onchange="location.href='?imei='+$(this).val()" id="" class="form-control">
                     <option value="">Cihaz seçiniz</option>
                     <?php foreach($cihazlar AS $c)  { 
@@ -45,36 +48,45 @@
             <?php if(getisset("imei"))  { 
               ?>
                 <div class="col-12 col-xl-6 col-centered">
-                    <div class="btn-group btn-block ">
                         <div 
-                            class="btn  btn-info "
+                            class="btn  btn-info btn-block"
                             id="tumunu-guncelle"
                         >
                             <i class="fa fa-refresh"></i> Göstergeleri Güncelle
                         </div>
-                        <div 
-                            class="btn btn-warning "
-                            id="digital-inputs-guncelle"
-                            >
-                            <i class="fa fa-refresh"></i> 
-                            Digital Inputları Güncelle
-                        </div>
-                    </div>
+                        
                 </div>
                  <script>
                      $(function(){
-                        $.get("?ajax=is-online",{
-                            imei : "{{get("imei")}}",
-                            command : "0"
-                        }, function(d){
-                            if(d.trim()=="30") {
-                                $("#tumunu-guncelle").hide();
-                                $("#digital-inputs-guncelle").hide();
-                            } else {
-                                $("#tumunu-guncelle").show();
-                                $("#digital-inputs-guncelle").show();
+                            function isOnline() {
+                                $.get("?ajax=is-online",{
+                                    imei : "{{get("imei")}}",
+                                    command : "0"
+                                }, function(d){
+                                    if(d.trim()=="30") {
+                                        $("#tumunu-guncelle").hide();
+                                        $("#digital-inputs-guncelle").hide();
+                                        $(".is-online").removeClass("btn-secondary");
+                                        $(".is-online").removeClass("btn-success");
+                                        $(".is-online").addClass("btn-danger").html("Pasif");
+                                        $(".css-control,.reset").addClass("disabled");
+                                    } else {
+                                        $("#tumunu-guncelle").show();
+                                        $("#digital-inputs-guncelle").show();
+                                        $(".is-online").removeClass("btn-secondary");
+                                        $(".is-online").removeClass("btn-danger");
+                                        $(".is-online").addClass("btn-success").html("Aktif");
+                                        $(".css-control,.reset").removeClass("disabled");
+                                    }
+                                });
                             }
-                        });
+
+                            isOnline();
+
+                            setInterval(function(){
+                                isOnline();
+                            },60000);
+                            
                          $("#tumunu-guncelle").on("click", function(){
                              var bu = $(this);
                              var html = bu.html();
@@ -85,11 +97,12 @@
                                  keyboard: false
                              });
                                
-                             $.getJSON('?ajax=tumunu-guncelle',{
+                             $.get('?ajax=tumunu-guncelle',{
                                  imei : "{{get("imei")}}"
                              },function(d){
+                                location.reload();
                                  bu.html(html);
-                                 location.reload();
+                                
                                  console.log(d);
                              })
                          });
@@ -103,12 +116,12 @@
                                  keyboard: false
                              });
                                
-                             $.getJSON('?ajax=digital-inputs-guncelle',{
+                             $.get('?ajax=digital-inputs-guncelle',{
                                  imei : "{{get("imei")}}"
                              },function(d){
-                               
+                                    location.reload();
                                  bu.html(html);
-                                 location.reload();
+                                 
                                  console.log(d);
                              });
                          });
@@ -154,6 +167,7 @@ if($type=="digital-input") {
                         data-id="{{$c->id}}" 
                         data-maks="{{$c->maks}}" 
                         data-mask="{{$c->mask}}" 
+                        data-carpan="{{$c->carpan}}" 
                         data-bas="{{$c->bas}}" 
                         data-son="{{$c->son}}" 
                         
