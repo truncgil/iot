@@ -142,6 +142,7 @@ $(".ckeditor").each(function(){
 			var son = $(this).attr("data-son");
 			var id = $(this).attr("data-id");
 			var mask = $(this).attr("data-mask");
+			var carpan = $(this).attr("data-carpan");
 			var max = $(this).attr("data-maks");
 			bu.find("i").addClass("fa-spin");
 			var gauge = "container"+id;
@@ -184,7 +185,7 @@ $(".ckeditor").each(function(){
 								command : command,
 								sonuc : d.trim() 
 							});
-							decimal =  decimal / mask;
+							decimal =  ((decimal / mask)*carpan).toFixed(2);
 							console.log(command + " : " + d + " : " + decimal);
 							var random = decimal;//+(Math.random() * 60).toFixed(2);
 

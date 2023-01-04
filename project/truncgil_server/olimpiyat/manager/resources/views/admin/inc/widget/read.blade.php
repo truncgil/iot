@@ -14,11 +14,16 @@ var lastValue = "{{$lastValue}}"
                             {{$c2->son}}
                         );
                         console.log("lastValue="+lastValue);
-var decimal = (Math.round(parseInt(
+var decimal = ((Math.round(parseInt(
                     lastValue, 
                     16
-                )) / {{$c2->mask}} ).toFixed(2);
+                )) / {{$c2->mask}} )* {{$c2->carpan}}).toFixed(2);
 //console.log(decimal);
+              <?php if($c2->carpan!="") {
+                 ?>
+                 decimal = decimal ;
+                 <?php 
+              } ?>
                 var i = 0;
                     var v = decimal.toString();
                     var maskingDecimal = decimal;

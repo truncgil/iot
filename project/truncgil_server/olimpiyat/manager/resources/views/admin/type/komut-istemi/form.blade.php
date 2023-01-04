@@ -30,8 +30,12 @@
 
                             </div>
                             <div class="col-md-6">
-                                Veri Maskesi
+                                Veri Maskesi (Bölüm Kat Sayısı)
                                 <input type="text" name="mask" value="{{$c2->mask}}" id="mask{{$c2->id}}" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                Çarpım Kat Sayısı
+                                <input type="number" step="any" name="carpan" value="{{$c2->carpan}}" id="carpan{{$c2->id}}" class="form-control">
                             </div>
                             <div class="col-md-6">
                                 Veri Birimi
