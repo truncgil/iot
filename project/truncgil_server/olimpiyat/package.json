@@ -1,0 +1,19 @@
+{
+  "name": "olimpiyat",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "socketio.js",
+  "dependencies": {
+    "express": "^4.18.2",
+    "pm2": "^5.2.0",
+    "socket.io": "^4.5.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

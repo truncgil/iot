@@ -2,9 +2,7 @@ const secret_key = "olimpiyat_truncgil1854sa!";
 var _ = require('lodash');
 var net = require('net');
 const axios = require('axios');
-require('events').EventEmitter.prototype._maxListeners = 0;
 require('./lib/server');
-
 var clients = [];
 
 net.createServer(function(socket) {
@@ -25,50 +23,44 @@ net.createServer(function(socket) {
                     console.log(message);
                     var buffer = new Buffer.from(message,'hex');
                     console.log(buffer);
-                    
-                    let sonuc = false;
-
+    
                     if (!client.destroyed) {
                         client.write(buffer);
-
-                        client.on('data',function(return_data) {
-                        
-                        
-    
-                            if (!socket.destroyed) {
-                                socket.write(return_data);
-                                console.log("reply data");
-                                console.log(return_data);
-                                sendLog(imei, return_data, message);
-                                sonuc = true;
-                              // client.removeAllListeners("connect");
-                               // return_data = null;
-                            } else {
-                            //    console.log("not reply socket destroy");
-                            }
-                          
-                            
-                            
-                            
-                            
-                        }); 
-
                     } else {
                         console.log("client destroyed");
                         socket.write("0");
                     }
                     
-                   // sendLog(imei, message);
-                   var say = 0;
-                   var timeoutSay = setInterval(() => {
-                        say++;
-                        if(say>3 && !sonuc) {
-                            console.log("reply timeout");
-                            socket.write("-1");
-                            clearInterval(timeoutSay);
+                    sendLog(imei, message);
+    
+                    client.on('data',function(return_data) {
+                        
+                        
+    
+                        if (!socket.destroyed) {
+                            socket.write(return_data);
+                            console.log("reply data");
+                            console.log(return_data);
+                            sendLog(imei, return_data, message);
+                           // return_data = null;
                         }
-                    }, 1000);
-                    
+                        /*
+                        try {
+                            
+                            
+                        } catch (error) {
+                            socket.write("not_reply");
+                            
+                        }
+                        
+                        */
+                        //client.end();
+                        //client.destroy();
+                        
+                        
+                        
+                        
+                    }); 
                 }
                 
         } catch (error) {
@@ -102,26 +94,12 @@ net.createServer(function(socket) {
         var isJson =  data.indexOf('{');
         if(isJson!=-1) {
             console.log("json data send");
-
-            let device = 0;
-
             try {
-                device = JSON.parse(data.toString());
+                var device = JSON.parse(data.toString());
+                broadcast(device.imei, device.command);
             } catch (error) {
-                
+                console.log(error);
             }
-
-            if(device!=0) {
-
-                try {        
-                    broadcast(device.imei, device.command);
-                } catch (error) {
-                    
-                    console.log(data);
-                    console.log(error);
-                }
-            }
-            
             
         } else {
             if (socket.remoteAddress !== '::ffff:127.0.0.1') {
@@ -129,7 +107,7 @@ net.createServer(function(socket) {
                 if (typeof socket.imei === 'undefined') {
                     
                     if(typeof clients[data] === 'undefined') {
-                        
+                    
                         if (setIMEI(data)) {
                             console.log("Device Connected " + data);
                             if (!socket.destroyed) {
@@ -141,7 +119,6 @@ net.createServer(function(socket) {
                             }
                         }
                     } else {
-                        setIMEI(data);
                         console.log("device already connected");
                     }
                     
@@ -186,85 +163,48 @@ net.createServer(function(socket) {
                 console.log("sendLog from axios => "+ imei + " :: " + from + " :: " + text);
                 })
                 .catch(error => {
-                    console.log("axios error");
+                    console.log("axios hatası");
                     console.error(error);
                 });  
         }
         
     }
-
     var getHash = function(text) {
         return require('crypto').createHash('sha256').update(secret_key+text, 'binary').digest('hex');
     }
-    
     var setIMEI = function(imei) {
         let hash = require('crypto').createHash('sha256').update(secret_key+imei, 'binary').digest('hex');
         let url = encodeURI('https://app.olimpiyat.com.tr/manager/iot-connect?imei='+imei+'&hash='+hash);
-        
-        
-        //console.log("cihaz sayisi=" + clients.length);
-      //  console.log(imei.length);
-        imei = imei.toString().trim();
-        if (imei !== '') {
 
-            if(imei.length==12) {
-                try {
-                    clients[imei].close();
-                } catch (error) {
-                    
-                }
-                setTimeout(function() {
-                    clients[imei] = socket;
-                    //socket.imei = imei;
-                        axios
-                            .get(url)
-                            .then(res => {
-                              //  console.log(`statusCode: ${res.status}`);
-                              try {
-                                var data = res.data;
-                                console.log(data);
-                                if(Array.isArray(data)) {
-                                    console.log("stand up data sending...");
-                                    console.log(data);
-                                    let k = 0;
-                                    data.forEach(function(command, i, a){
-    
-                                        console.log(command);
-                                        setTimeout(function(){
-                                            console.log("send " + command);
-                                            command = command.replace(/\s/g, '');
-                                            var buffer = new Buffer.from(command,'hex');
-                                            socket.write(buffer);
-                                            socket.on('data' ,function(return_data){
-                                                console.log("return " + return_data.toString('hex'));
-                                            });
-                                          //  broadcast('{"imei":"' + imei + '","command":"' + command + '"}');
-                                        }, 1000*k);
-                                        k++;
-                                    });
-                                }
-                                
-                              } catch (error) {
-                                console.log(error);
-                              }
-                                
-        
-                               console.log("device connected send from axios =>" + imei );
-                            })
-                            .catch(error => {
-                                console.error(error);
-                            });
-                },1000);
-                
-    
-                
-    
-                return true;
-            } else {
-                socket.write(imei + " " + imei.length +" IMEI error");
-                return false;
-            }
-            
+        if (imei.toString().trim() !== '') {
+            //socket.imei = imei;
+                axios
+                    .get(url)
+                    .then(res => {
+                      //  console.log(`statusCode: ${res.status}`);
+                      try {
+                        var data = res.data;
+                        console.log("stand up data sending...");
+                        console.log(data);
+                        data.forEach(function(command, i, a){
+                            console.log(command);
+                            socket.write('{"imei":"' + imei + '","command":"' + command + '"}');
+                        });
+                      } catch (error) {
+                        
+                      }
+                        
+
+                       console.log("device connected send from axios =>" + imei );
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+
+            clients[imei] = socket;
+            console.log("cihaz sayisi=" + clients.length);
+
+            return true;
         } else {
 
             axios
