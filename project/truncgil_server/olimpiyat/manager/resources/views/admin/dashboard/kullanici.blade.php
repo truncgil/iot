@@ -1,13 +1,16 @@
 @include("admin.dashboard.inc.dashboard-css")
-<div class="modal" id="tumunu-guncelle-modal">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+<div class="modal rounded" id="tumunu-guncelle-modal">
+  <div class="modal-dialog modal-dialog-centered ">
+    <div class="modal-content rounded">
 
 
       <!-- Modal body -->
-      <div class="modal-body text-center">
+      <div class="modal-body text-center ">
         <i style="font-size:50px;" class="fa fa-spin fa-spinner"></i> <br>
         Güncelleniyor. Lütfen bekleyiniz...
+        <div class="progress mt-5">
+            <div class="progress-bar" style="width:0%">0%</div>
+        </div>
       </div>
 
 
@@ -86,7 +89,7 @@
                             setInterval(function(){
                                 isOnline();
                             },60000);
-                            
+                            /*
                          $("#tumunu-guncelle").on("click", function(){
                              var bu = $(this);
                              var html = bu.html();
@@ -106,6 +109,61 @@
                                  console.log(d);
                              })
                          });
+                         */
+                            var basla = true;
+                            var sira = 0;
+                            var toplam = $(".widget-guncelle").length;
+                            var start = false;
+                            var percentage = 0;
+
+                            $("#tumunu-guncelle").on("click", function(){
+                                start = true;
+-                               $(".widget-guncelle:eq("+sira+")").trigger("click");
+
+
+                                setTimeout(() => {
+                                    percentage = (sira+1) * 100 / toplam;
+                                    $(".progress-bar").css("width",percentage + '%').html(percentage + '%');
+                                }, 1000);
+                                
+                             
+    
+                                $('#tumunu-guncelle-modal').modal({
+                                    backdrop: 'static', 
+                                    keyboard: false
+                                });
+                            });
+                            
+                            $( document ).ajaxStop(function() {
+                                if(start) {
+                                    if(sira<toplam) {
+                                        
+                                        setTimeout(() => {
+                                            sira++;
+                                            percentage = (sira) * 100 / toplam;
+                                            $(".progress-bar").css("width",percentage + '%').html(percentage + '%');
+                                            console.log(sira);
+                                            $(".widget-guncelle:eq("+sira+")").trigger("click");
+                                        }, 100);
+                                        
+                                        
+                                    } else {
+                                        sira = 0;
+                                        start = false;
+                                        $('#tumunu-guncelle-modal').modal("hide");
+                                        
+                                    }
+                                    if(percentage>=90) {
+                                        sira = 0;
+                                        start = false;
+                                        $('#tumunu-guncelle-modal').modal("hide");
+                                    }
+                                } else {
+                                    sira = 0;
+                                }
+                                
+                            });
+
                          $("#digital-inputs-guncelle").on("click", function(){
                              var bu = $(this);
                              var html = bu.html();
