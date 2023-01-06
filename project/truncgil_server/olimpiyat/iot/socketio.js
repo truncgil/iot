@@ -10,10 +10,7 @@ const credentials = {
     key: privateKey, 
     cert: certificate
 }
-var options = {
-    key:    require('fs').readFileSync('/etc/ssl/certs/app.olimpiyat.com.tr.cert'),
-    cert:   require('fs').readFileSync('/etc/ssl/certs/app.olimpiyat.com.tr.cert')
-};
+
 const httpServer = require("https").createServer(credentials);
 
 const io = require("socket.io")(httpServer,  {
@@ -22,8 +19,10 @@ const io = require("socket.io")(httpServer,  {
 });
 
 io.on("connection", (socket) => {
-  console.log('a user connected'); 
+ // console.log(socket);
+  socket.to("data").emit();
 });
+
 
 
 httpServer.listen(3000);

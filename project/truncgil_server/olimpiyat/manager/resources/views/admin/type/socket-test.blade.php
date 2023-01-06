@@ -17,9 +17,11 @@
     socket.on('messages', function(data){
         console.log(data);
     });
-    socket.emit('send-message', {
-        'name' : "Ümit",
-        'surname' : "Tunç"
+    socket.emit('data', {
+        'imei' : "344041073520",
+        'command' : "01 03 22 06 00 01 6E 73"
+    },(answer) => {
+        console.log(answer);
     });
 </script>
 <div class="content">
