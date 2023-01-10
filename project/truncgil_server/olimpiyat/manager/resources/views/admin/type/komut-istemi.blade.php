@@ -1,3 +1,5 @@
+
+<?php $yetkilerim = cihaz_yetkilerim(); ?>
 <div class="content">
     <div class="row">
         <?php 
@@ -45,8 +47,61 @@
             </div>    
         {{_col()}} 
         <?php } ?>
+
+         {{col("col-12","Cihazdan Cihaza Komut Klonla")}} 
+         <?php if(getisset("klonla")) {
+            if(postesit("from",post("to"))) {
+                bilgi("Lütfen iki farklı imei seçiniz.","warning");
+            } else {
+                $komutlar = db("komut_istemi")->where("imei",post("from"))->get();
+                $k = 0;
+                foreach($komutlar AS $komut) {
+                    $komut->imei = post("to");
+                    unset($komut->id);
+                    unset($komut->slug);
+                    $komut->slug = rand();
+                    
+                    ekle2((Array) $komut,"komut_istemi");
+                    $k++;
+                }
+                bilgi("$k adet komut {$_POST['from']} cihazından {$_POST['to']} cihazına kopyalanmıştır");
+            }
+            
+         } ?>
+                <form action="?klonla" method="post">
+                    @csrf
+                    <div class="input-group">
+                        <label >
+                            Kaynak
+                            <select name="from" id="" required class="form-control">
+                                <option value="">Seçiniz</option>
+                                <?php foreach($yetkilerim AS $y)  { 
+                                ?>
+                                <option value="{{$y}}">{{$y}}</option> 
+                                <?php } ?>
+                            </select>
+                        </label>
+                        <label >
+                            Hedef
+                            <select name="to" id="" required class="form-control">
+                                <option value="">Seçiniz</option>
+                                <?php foreach($yetkilerim AS $y)  { 
+                                ?>
+                                <option value="{{$y}}">{{$y}}</option> 
+                                <?php } ?>
+                            </select>
+                        </label>
+                        <label>
+                            <br>
+                            <button class="btn btn-primary">Komutları kopyala</button>
+                        </label>
+                    </div>
+                </form>
+          
+         {{_col()}}
     </div>
     
+
 <div class="block">
         <div class="block-header block-header-default">
             <h3 class="block-title"><i class="fa fa-{{$c->icon}}"></i> {{e2($c->title)}} {{__('İçerikleri')}}</h3>

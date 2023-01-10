@@ -258,7 +258,7 @@ if(getisset("ajax")) {
     margin: 0 auto;
     position: absolute;
     top: 6px;
-    left: calc(50% - 100px/2);" alt="" class="show-mobile">
+    left: calc(50% - 42px/2);" alt="" class="show-mobile">
                     <button type="button" class="sag-menu btn btn-circle btn-dual-secondary hide-mobile" data-toggle="layout"
                         data-action="header_search_on">
                         <i class="fas fa-search"></i>

@@ -76,7 +76,7 @@ $(function(){
                         $("#modal{{$c2->id}} .fa").addClass("fa-check-circle");
                         //$("#modal{{$c2->id}} .no").removeClass("d-none").html("OK");
 
-                        $("#modal{{$c2->id}} .text").html("Yazılan değer: "+decimal);
+                      //  $("#modal{{$c2->id}} .text").html("Yazılan değer: "+decimal);
                         $("#modal{{$c2->id}} .title").html("Yazma tamamlandı!");
                         
                         rollBack();
@@ -144,7 +144,7 @@ $(function(){
         
         <i class="fa fa-info-circle fa-2x"></i> 
         <h2 class="title">Uyarı</h2>
-        <div class="text"><strong><span class="type"></span></strong> değeri yazılacak. Devam etmek istiyor musunuz?</div> 
+        <div class="text"><strong><span class="type"></span></strong> işlemi yapılacak. Devam etmek istiyor musunuz?</div> 
 
       </div>
 

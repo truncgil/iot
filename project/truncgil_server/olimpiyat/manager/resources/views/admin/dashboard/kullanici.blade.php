@@ -36,10 +36,7 @@
          ?>
           {{col("col-12","Cihaz Bilgisi")}} 
           <div class="row">
-            <div class="col-md-2">
-                <div class="btn btn btn-secondary is-online btn-block"><i class="fa fa-spin fa-spinner"></i></div>
-            </div>
-            <div class="col-md-4">
+          <div class="col-md-12">
                 <select name="" onchange="location.href='?imei='+$(this).val()" id="" class="form-control">
                     <option value="">Cihaz seçiniz</option>
                     <?php foreach($cihazlar AS $c)  { 
@@ -48,17 +45,68 @@
                     <?php } ?>
                 </select>
             </div>
+          </div>
+          <div class="row mt-10">
+            
+            <div class="col-md-2">
+                <a class="block block-link-shadow text-center" href="javascript:void(0)">
+                    <div class="block-content">
+                        <p class="mt-5">
+                            <i class="fa fa-wifi fa-4x text-info"></i>
+                        </p>
+                        <p class="font-w600 rounded is-online"><i class="fa fa-spin fa-spinner"></i></p>
+                    </div>
+                </a>
+              
+            </div>
+            
             <?php if(getisset("imei"))  { 
               ?>
-                <div class="col-12 col-xl-6 col-centered">
-                        <div 
-                            class="btn  btn-info btn-block"
-                            id="tumunu-guncelle"
-                        >
-                            <i class="fa fa-refresh"></i> Göstergeleri Güncelle
-                        </div>
+                <div class="col-12 col-xl-2 col-centered">
+                        <a  href="javascript:void(0)" class="block block-link-shadow text-center"  id="tumunu-guncelle">
+                            <div class="block-content">
+                                <p class="mt-5">
+                                    <i class="fa fa-refresh fa-4x text-primary"></i>
+                                </p>
+                                <p class="">Tümünü Güncelle</p>
+                            </div>
+                        </a>
+                        
                         
                 </div>
+                <div class="col-12 col-xl-2 col-centered">
+                        <a  href="javascript:void(0)" class="block block-link-shadow text-center"  id="tumunu-guncelle">
+                            <div class="block-content">
+                                <p class="mt-5">
+                                    <i class="fa fa-clock fa-4x text-warning"></i>
+                                </p>
+                                <small>{{date("d/m/Y")}} <br>
+                                    <span id="saat"></span>    
+                                </small>
+                                
+                            </div>
+                        </a>
+                        
+                        
+                </div>
+                <script>
+                function startTime() {
+                        const today = new Date();
+                        let h = today.getHours();
+                        let m = today.getMinutes();
+                        let s = today.getSeconds();
+                        m = checkTime(m);
+                        s = checkTime(s);
+                        document.getElementById('saat').innerHTML =  h + ":" + m + ":" + s;
+                        setTimeout(startTime, 1000);
+                }
+
+                function checkTime(i) {
+                    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+                        return i;
+                }
+                startTime()
+                </script>
                  <script>
                      $(function(){
                             function isOnline() {
@@ -122,7 +170,7 @@
 
 
                                 setTimeout(() => {
-                                    percentage = (sira+1) * 100 / toplam;
+                                    percentage = Math.round((sira+1) * 100 / toplam);
                                     $(".progress-bar").css("width",percentage + '%').html(percentage + '%');
                                 }, 1000);
                                 
@@ -140,7 +188,7 @@
                                         
                                         setTimeout(() => {
                                             sira++;
-                                            percentage = (sira) * 100 / toplam;
+                                            percentage = Math.round((sira) * 100 / toplam);
                                             $(".progress-bar").css("width",percentage + '%').html(percentage + '%');
                                             console.log(sira);
                                             $(".widget-guncelle:eq("+sira+")").trigger("click");
