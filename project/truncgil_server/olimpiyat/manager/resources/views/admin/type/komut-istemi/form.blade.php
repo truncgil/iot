@@ -22,6 +22,7 @@
                                 Komut Türü
                                 <select name="alt_type" id="" value="{{$c2->alt_type}}" id="json{{$c2->id}}" class="form-control json{{$c2->id}}">
                                     <option value="read" <?php if($c2->alt_type=="read") echo "selected"; ?>>Okuma Komutu</option>
+                                    <option value="read-convertible" <?php if($c2->alt_type=="read-convertible") echo "selected"; ?>>Okuma Komutu (Tür Dönüşümlü)</option>
                                   <option value="write"  <?php if($c2->alt_type=="write") echo "selected"; ?>>Yazma Komutu</option>
                                   <option value="onoff"  <?php if($c2->alt_type=="onoff") echo "selected"; ?>>On Off Toggle</option>
                                   <option value="reset"  <?php if($c2->alt_type=="reset") echo "selected"; ?>>Reset</option>
