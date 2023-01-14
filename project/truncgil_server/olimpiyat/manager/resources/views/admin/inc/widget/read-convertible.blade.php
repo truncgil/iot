@@ -6,9 +6,9 @@ if(!isset($lastValue)) {
 <div id="widget{{$c2->id}}">
 <small><div class="badge badge-info d-none">Son güncelleme: {{zf($c2->sonuc_date)}}</div></small>
 <p id="container{{$c2->id}}" class="font-size-h1 text-corporate">
-                                        <strong>98.25</strong>
+                                        <strong></strong>
                                     </p>
-<div  class="truncgil-gauge" style="width: 100%;height:250px;"></div>
+
 
 <script type="text/javascript">
 var lastValue = "{{$lastValue}}"
@@ -55,7 +55,8 @@ var decimal = Math.round(parseInt(
                  //    $("#container{{$c2->id}}").html(maskingDecimal); 
 </script>
 
-              
+              <div class="block-footer">
            <div>{{$c2->title}}</div>
+           </div>
            <h2><div id="decimal{{$c2->id}}"></div></h2>
 </div>

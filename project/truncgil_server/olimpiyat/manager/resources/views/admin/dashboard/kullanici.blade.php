@@ -48,7 +48,11 @@
           </div>
           <div class="row mt-10">
             
-            <div class="col-md-2">
+           
+            
+            <?php if(getisset("imei"))  { 
+              ?>
+               <div class="col-md-2">
                 <a class="block block-link-shadow text-center" href="javascript:void(0)">
                     <div class="block-content">
                         <p class="mt-5">
@@ -59,9 +63,6 @@
                 </a>
               
             </div>
-            
-            <?php if(getisset("imei"))  { 
-              ?>
                 <div class="col-12 col-xl-2 col-centered">
                         <a  href="javascript:void(0)" class="block block-link-shadow text-center"  id="tumunu-guncelle">
                             <div class="block-content">
