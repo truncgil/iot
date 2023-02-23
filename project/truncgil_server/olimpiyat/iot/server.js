@@ -65,6 +65,7 @@ net.createServer(function(socket) {
                         if(say>3 && !sonuc) {
                             console.log("reply timeout");
                             socket.write("-1");
+                            delete clients[imei];
                             clearInterval(timeoutSay);
                         }
                     }, 1000);
