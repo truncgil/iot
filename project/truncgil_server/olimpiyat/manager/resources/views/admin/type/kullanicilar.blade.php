@@ -1,4 +1,37 @@
 <?php
+
+
+
+use App\User;
+
+
+$u = u();
+
+if(getisset("user-add")) {
+				$rand = rand(111,999);
+
+				$user = new User;
+
+				$user->name = $rand;
+
+				$user->surname = $rand;
+
+				$user->email = $rand;
+				$user->level = "Kullanıcı";
+				$user->alias = $u->alias;
+				$user->uid = $u->id;
+
+				$user->phone = $rand;
+
+				
+
+				$user->password = Hash::make($rand);
+
+				$user->save();
+}
+		
+
+		
 	$u = u();
 	$seviye = user_levels();
 	$request = null;
@@ -29,14 +62,14 @@
 			</h3>
             <div class="block-options">
                 <div class="block-options-item">
-                    <a href="{{ url('admin-ajax/user-add') }}" class="btn btn-default"><i class="fa fa-plus"></i></a>
+                    <a href="?user-add" class="btn btn-default"><i class="fa fa-plus"></i></a>
                 </div>
             </div>
         </div>
 		
 
         <div class="block-content">
-
+		{{$users->appends($_GET)->links() }}
 			<div class="table-responsive">
 				<table class="table table-bordered table-hover table-striped">
 					<tr>
