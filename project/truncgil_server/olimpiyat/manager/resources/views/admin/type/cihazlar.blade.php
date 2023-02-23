@@ -1,8 +1,9 @@
 <?php 
 $u = u();
-
+$users = kurum_users();
+$yetkilerim = cihaz_yetkilerim(); 
 if(getisset("delete")) {
-    $yetkilerim = cihaz_yetkilerim(); 
+    
     db("yetkiler")->whereIn("imei",$yetkilerim)->where("imei",get("delete"))->delete();
     db("cihazlar")->whereIn("imei",$yetkilerim)->where("imei",get("delete"))->delete();
 }
@@ -12,6 +13,9 @@ if(getisset("delete")) {
     <div class="row">
          {{col("col-12","Yeni Cihaz Kaydı")}} 
          <?php 
+         if(getisset("delete-perm")) {
+            db("yetkiler")->whereIn("imei",$yetkilerim)->where("id",get("delete-perm"))->delete();
+         }
          if(getisset("add")) {
             try {
                 if(strlen(post("imei"))==12) {
@@ -123,6 +127,21 @@ if(getisset("delete")) {
                         <br>
                         <button class="btn btn-primary btn-hero mt-1">Ekle</button>
                      </form>
+                     <form action="?alias&imei={{get("imei")}}&ekle" method="post" class="text-center">
+                        @csrf
+                        <input type="hidden" name="imei" value="{{get("imei")}}">
+                        {{get("imei")}} IMEI Aygıtını Yetkilendir: 
+                        <select name="alias" required id="" class="form-control select2">
+                                <option value="">Kullanıcı Seçiniz</option>
+                            <?php foreach(kurum_users() AS $user)  { 
+                                ?>
+                                <option value="{{$user->id}}">{{$user->name}} {{$user->surname}} ({{$user->id}})</option> 
+                                <?php } ?>
+                        </select>
+                        <br>
+                        <button class="btn btn-primary btn-hero mt-1">Ekle</button>
+                     </form>
+
                       {{_col()}}
                       {{col("col-12","Yetkilendirilmiş Etki Alanları")}} 
                         <div class="table-responsive">
@@ -132,10 +151,26 @@ if(getisset("delete")) {
                                     <th>İşlem</th>
                                 </tr>
                                 <?php foreach($yetkiler AS $y)  { 
+                                    $id = (int) $y->alias;
                                 ?>
                                 <tr>
-                                    <td>{{$y->alias}}</td>
-                                    <td></td>
+                                    <td>
+                                        <?php if(isset($users[$y->alias])) {
+                                            $user = $users[$y->alias];
+                                             ?>
+                                            <i class="fa fa-user"></i>  {{$user->name}} {{$user->surname}} 
+                                             <?php 
+                                         
+                                        } else {
+                                             ?>
+                                             <i class="fa fa-globe"></i> {{$y->alias}} 
+                                             <?php 
+                                        } ?>
+                                    </td>
+                                    <td>
+                                        <a href="?imei={{get("imei")}}&alias&delete-perm={{$y->id}}" class="btn btn-danger" teyit="Bu yetkilendirmeyi silmek istediğinizden emin misiniz?"><i class="fa fa-times"></i></a>
+
+                                    </td>
                                 </tr> 
                                 <?php } ?>
                             </table>
