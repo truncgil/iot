@@ -22,6 +22,11 @@ if(getisset("delete")) {
                     ekle2(
                         [
                             'imei' =>post("imei"),
+                            'takip_no' =>post("takip_no"),
+                            'firma' =>post("firma"),
+                            'kullanici' =>post("kullanici"),
+                            'cihaz_tipi' =>post("cihaz_tipi"),
+                            'guc' =>post("guc"),
                             'alias' => $u->alias
                         ]
                     , "yetkiler");
@@ -50,6 +55,17 @@ if(getisset("delete")) {
                 @csrf
                 IMEI (12 Haneli):
                 <input type="text" name="imei" required id="" class="form-control">
+                Takip No:
+                <input type="text" name="takip_no" id="" class="form-control">
+                Firma:
+                <input type="text" name="firma" id="" class="form-control">
+                Kullanıcı:
+                <input type="text" name="kullanici" id="" class="form-control">
+                Cihaz Tipi:
+                <input type="text" name="cihaz_tipi" id="" class="form-control">
+                Güç:
+                <input type="text" name="guc" id="" class="form-control">
+                
                 <button class="btn btn-primary mt-5">Cihaz Ekle</button>
 
 
@@ -187,6 +203,11 @@ if(getisset("delete")) {
                         <tr>
                             <th>Mac Adresi</th>
                             <th>İsim</th>
+                            <th>Takip No</th>
+                            <th>Firma</th>
+                            <th>Kullanıcı</th>
+                            <th>Cihaz Tipi</th>
+                            <th>Güç</th>
                             <th>Son bağlantı</th>
                             <th>İşlem</th>
                         </tr>
@@ -200,6 +221,21 @@ if(getisset("delete")) {
                              <td>{{$c->imei}}</td>
                              <td>
                                 <input type="text" name="title" value="{{$c->title}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
+                             </td>
+                             <td>
+                                <input type="text" name="takip_no" value="{{$c->takip_no}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
+                             </td>
+                             <td>
+                                <input type="text" name="firma" value="{{$c->firma}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
+                             </td>
+                             <td>
+                                <input type="text" name="kullanici" value="{{$c->kullanici}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
+                             </td>
+                             <td>
+                                <input type="text" name="guc" value="{{$c->guc}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
+                             </td>
+                             <td>
+                                <input type="text" name="cihaz_tipi" value="{{$c->cihaz_tipi}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
                              </td>
                              <td>{{df($c->online)}}
                                 <div class="badge badge-success">{{zf($c->online)}}</div>
