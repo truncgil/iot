@@ -5,6 +5,9 @@ $alt = $alt->whereIn("imei",$yetkilerim);
 if(!getesit("imei","")) {
 	$alt = $alt->where("imei",get("imei"));
 }
+if(!getesit("q","")) {
+	$alt = $alt->where("imei",get("q"));
+}
 if(getisset("delete")) {
 	db("komut_istemi")
 		->whereIn("imei",$yetkilerim)
