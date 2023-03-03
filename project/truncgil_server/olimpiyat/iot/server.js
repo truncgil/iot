@@ -3,6 +3,7 @@ var _ = require('lodash');
 var net = require('net');
 const axios = require('axios');
 require('events').EventEmitter.prototype._maxListeners = 0;
+require('events').EventEmitter.prototype.defaultMaxListeners  = 0;
 require('./lib/server');
 
 var clients = [];
@@ -17,16 +18,20 @@ net.createServer(function(socket) {
                     socket.write("0");
                     console.log(imei+" device offline");
                 } else {
+                    
                     let client = clients[imei];
                     console.log("imei to " + imei);
                     message = message.replace(/\s/g, '');
                     //  message = parseInt("01 03 21 05 00 01 9e 37", 16).toString();
                     // message = message.toString(16);
+                    let sonuc = false;
+
+                    
                     console.log(message);
                     var buffer = new Buffer.from(message,'hex');
                     console.log(buffer);
                     
-                    let sonuc = false;
+                    
 
                     if (!client.destroyed) {
                         client.write(buffer);
@@ -41,12 +46,12 @@ net.createServer(function(socket) {
                                 console.log(return_data);
                                 sendLog(imei, return_data, message);
                                 sonuc = true;
-                              // client.removeAllListeners("connect");
-                               // return_data = null;
+                            // client.removeAllListeners("connect");
+                            // return_data = null;
                             } else {
                             //    console.log("not reply socket destroy");
                             }
-                          
+                        
                             
                             
                             
@@ -57,18 +62,28 @@ net.createServer(function(socket) {
                         console.log("client destroyed");
                         socket.write("0");
                     }
+                  
                     
-                   // sendLog(imei, message);
-                   var say = 0;
-                   var timeoutSay = setInterval(() => {
-                        say++;
-                        if(say>3 && !sonuc) {
-                            console.log("reply timeout");
-                            socket.write("-1");
-                        //    delete clients[imei];
-                            clearInterval(timeoutSay);
-                        }
-                    }, 1000);
+                    
+                    // sendLog(imei, message);
+                    var say = 0;
+                    var timeoutSay = setInterval(() => {
+                            say++;
+                            if(say>3 && !sonuc) {
+                                
+                                if (!socket.destroyed) {
+                                    console.log("reply timeout");
+                                    console.log("deleting device");
+                                    socket.write("0");
+                                    delete clients[imei];
+                                } else {
+                                    //delete clients[imei];
+                                }
+
+                            //    delete clients[imei];
+                                clearInterval(timeoutSay);
+                            }
+                        }, 1000);
                     
                 }
                 
@@ -133,7 +148,9 @@ net.createServer(function(socket) {
                         
                         if (setIMEI(data)) {
                             console.log("Device Connected " + data);
+                            
                             if (!socket.destroyed) {
+                                socket.imei = data;
                                 socket.write('Device Connected');
                             }
                         } else {
@@ -161,10 +178,31 @@ net.createServer(function(socket) {
     });
 
     socket.on('end', function() {
-        var idx = clients.indexOf(socket);
-        if (idx != -1) {
-            delete clients[idx];
+        console.log("end");
+        
+        if (socket.imei !== undefined) {
+            console.log("disconnect " + socket.imei);
+            delete clients[socket.imei];
         }
+        
+    });
+    socket.on('destroy', function() {
+        console.log("destroy");
+        
+        if (socket.imei !== undefined) {
+            console.log("destroy " + socket.imei);
+            delete clients[socket.imei];
+        }
+        
+    });
+    socket.on('close', function() {
+        console.log("close");
+        
+        if (socket.imei !== undefined) {
+            console.log("destroy " + socket.imei);
+            delete clients[socket.imei];
+        }
+        
     });
     var sendLog = function(imei,text,from='') {
         text = text.toString('hex');

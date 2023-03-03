@@ -320,9 +320,14 @@ if($type=="digital-input") {
 
                                
                             </div>
-                            <div class="block-content bg-body-light">
+                            <div class="block-content bg-body-light"> 
                                
                                 <p class="font-w600">{{$y->title}} {{$y->imei}}</p>
+                                <small title="Takip No" class="badge badge-success">{{$y->takip_no}}</small>
+                                <small title="Firma Adı" class="badge badge-danger">{{$y->firma}}</small>
+                                <small title="Kullanıcı Adı" class="badge badge-warning">{{$y->kullanici}}</small>
+                                <small title="Cihaz Tipi" class="badge badge-info">{{$y->cihaz_tipi}}</small>
+                                <small title="Güç" class="badge badge-primary">{{$y->guc}}</small>
                             </div>
                         </a>
                     </div>
