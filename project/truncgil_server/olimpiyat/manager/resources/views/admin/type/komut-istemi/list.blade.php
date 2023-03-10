@@ -8,6 +8,12 @@ if(!getesit("imei","")) {
 if(!getesit("q","")) {
 	$alt = $alt->where("imei",get("q"));
 }
+if(getesit("order","asc")) {
+	$alt = $alt->orderBy("s","ASC");
+}
+if(getesit("order","desc")) {
+	$alt = $alt->orderBy("s","DESC");
+}
 if(getisset("delete")) {
 	db("komut_istemi")
 		->whereIn("imei",$yetkilerim)
@@ -19,7 +25,7 @@ $alt = $alt
 ->orderBy("id","DESC")
 ->simplePaginate(20); ?>
             {{$alt->appends($_GET)->links()}}
-				<select name="" onchange="location.href='?imei='+$(this).val()" id="" class="form-control">
+				<select name="" onchange="location.href='?imei='+$(this).val()" id="" class="form-control select2">
 					<option value="">Tüm Cihazların Komutları</option>
 					<?php foreach($yetkilerim AS $y)  { 
 					  ?>
@@ -35,7 +41,14 @@ $alt = $alt
                         <th>{{__("IMEI")}}</th>
                         <th>{{__("Komut")}}</th>
                         <th>{{__("Tür")}}</th>
-						<th>{{__("Sıra")}}</th>
+						<th>{{__("Sıra")}}
+							<br>
+							<div class="btn-group">
+								<a href="?{{getisset("imei") ? 'imei='.get('imei') . '&' : ''}}order=asc" class="btn btn-sm btn-success">Artan</a>
+								<a href="?{{getisset("imei") ? 'imei='.get('imei') . '&' : ''}}order=desc" class="btn btn-sm btn-danger">Azalan</a>
+							</div>
+
+						</th>
 						<th>{{__("Durum")}}</th>
                         <th class="text-center" style="width: 100px;">{{__("İşlemler")}}</th>
                     </tr>

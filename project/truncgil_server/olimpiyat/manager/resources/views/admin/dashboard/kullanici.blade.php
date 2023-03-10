@@ -23,7 +23,7 @@
         <?php $yetkilerim = cihaz_yetkilerim();
         $cihazlar = db("cihazlar")->whereIn("imei",$yetkilerim)
         ->orderBy("online","DESC")
-        ->get();
+        ->simplePaginate(10);
         $komutlar = db("komut_istemi")
             
             ->where("y",1)
@@ -37,11 +37,20 @@
           {{col("col-12","Cihaz Bilgisi")}} 
           <div class="row">
           <div class="col-md-12">
-                <select name="" onchange="location.href='?imei='+$(this).val()" id="" class="form-control">
+                <select name="" onchange="location.href='?imei='+$(this).val()" id="" class="form-control select2">
                     <option value="">Cihaz seçiniz</option>
                     <?php foreach($cihazlar AS $c)  { 
                     ?>
-                    <option value="{{$c->imei}}" <?php if(getesit("imei",$c->imei)) echo "selected"; ?>>{{$c->title}} {{$c->imei}} ({{zf($c->online)}})</option> 
+                    <option value="{{$c->imei}}" <?php if(getesit("imei",$c->imei)) echo "selected"; ?>>{{$c->title}} {{$c->imei}} 
+                    
+                   / {{$c->takip_no}}
+                   / {{$c->firma}}
+                  /  {{$c->kullanici}}
+                   / {{$c->cihaz_tipi}}
+                   / {{$c->guc}}
+                    ({{zf($c->online)}})
+                
+                    </option> 
                     <?php } ?>
                 </select>
             </div>
@@ -267,22 +276,8 @@ if($type=="digital-input") {
     @if(View::exists("admin.inc.widget.$type"))
             {{col("col-md-4 col-12 widget order-2 {$c->alt_type}-widget text-center widget-".$c->id . " $commandClass", $c->title)}} 
            
-            <?php if($c->alt_type=="read" || $c->alt_type=="") { ?>
-                    <div class="btn btn-default  widget-guncelle" 
-                        data-imei="{{$c->imei}}" 
-                        data-command="{{$c->json}}" 
-                        data-id="{{$c->id}}" 
-                        data-maks="{{$c->maks}}" 
-                        data-mask="{{$c->mask}}" 
-                        data-carpan="{{$c->carpan}}" 
-                        data-bas="{{$c->bas}}" 
-                        data-son="{{$c->son}}" 
-                        
-                        
-                        style="position: absolute;
-                        right: 25px;
-                        z-index:1000;
-                        top: 10px;"><i class="fa fa-refresh"></i></div>
+            <?php if($c->alt_type=="read" || $c->alt_type=="" || $c->alt_type=="read-convertible") { ?>
+                    
             <?php } ?>
 
             <div class="bag d-none">{{$c->bag}}</div>
@@ -299,6 +294,9 @@ if($type=="digital-input") {
           } ?>
            <?php } else {
              ?>
+             <div class="col-12">
+                {{$cihazlar->appends($_GET)->links()}}
+             </div>
                 <?php foreach($cihazlar AS $y) {
                 ?>
 
@@ -328,11 +326,16 @@ if($type=="digital-input") {
                                 <small title="Kullanıcı Adı" class="badge badge-warning">{{$y->kullanici}}</small>
                                 <small title="Cihaz Tipi" class="badge badge-info">{{$y->cihaz_tipi}}</small>
                                 <small title="Güç" class="badge badge-primary">{{$y->guc}}</small>
+                                <small title="Güç" class="badge badge-primary">{{$y->adres}}</small>
+                                <small title="Güç" class="badge badge-primary">{{$y->lokasyon}}</small>
                             </div>
                         </a>
                     </div>
                 <?php 
                 } ?>
+                <div class="col-12">
+                    {{$cihazlar->appends($_GET)->links()}}
+                </div>
              <?php  
            } ?>
     </div>

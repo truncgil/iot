@@ -65,6 +65,10 @@ if(getisset("delete")) {
                 <input type="text" name="cihaz_tipi" id="" class="form-control">
                 Güç:
                 <input type="text" name="guc" id="" class="form-control">
+                Adres:
+                <input type="text" name="adres" id="" class="form-control">
+                Lokasyon:
+                <input type="text" name="lokasyon" id="" class="form-control">
                 
                 <button class="btn btn-primary mt-5">Cihaz Ekle</button>
 
@@ -208,6 +212,8 @@ if(getisset("delete")) {
                             <th>Kullanıcı</th>
                             <th>Cihaz Tipi</th>
                             <th>Güç</th>
+                            <th>Adres</th>
+                            <th>Lokasyon</th>
                             <th>Son bağlantı</th>
                             <th>İşlem</th>
                         </tr>
@@ -233,6 +239,12 @@ if(getisset("delete")) {
                              </td>
                              <td>
                                 <input type="text" name="guc" value="{{$c->guc}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
+                             </td>
+                             <td>
+                                <input type="text" name="adres" value="{{$c->adres}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
+                             </td>
+                             <td>
+                                <input type="text" name="lokasyon" value="{{$c->lokasyon}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
                              </td>
                              <td>
                                 <input type="text" name="cihaz_tipi" value="{{$c->cihaz_tipi}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
