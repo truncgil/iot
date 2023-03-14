@@ -48,8 +48,8 @@
         {{_col()}} 
         <?php } ?>
 
-         {{col("col-12","Cihazdan Cihaza Komut Klonla")}} 
-         <?php if(getisset("klonla")) {
+        {{col("col-6","Cihazdan Cihaza Komut Klonla")}} 
+        <?php if(getisset("klonla")) {
             if(postesit("from",post("to"))) {
                 bilgi("Lütfen iki farklı imei seçiniz.","warning");
             } else {
@@ -67,38 +67,70 @@
                 bilgi("$k adet komut {$_POST['from']} cihazından {$_POST['to']} cihazına kopyalanmıştır");
             }
             
-         } ?>
-                <form action="?klonla" method="post">
-                    @csrf
-                    <div class="input-group">
-                        <label >
-                            Kaynak
-                            <select name="from" id="" required class="form-control">
-                                <option value="">Seçiniz</option>
-                                <?php foreach($yetkilerim AS $y)  { 
-                                ?>
-                                <option value="{{$y}}">{{$y}}</option> 
-                                <?php } ?>
-                            </select>
-                        </label>
-                        <label >
-                            Hedef
-                            <select name="to" id="" required class="form-control">
-                                <option value="">Seçiniz</option>
-                                <?php foreach($yetkilerim AS $y)  { 
-                                ?>
-                                <option value="{{$y}}">{{$y}}</option> 
-                                <?php } ?>
-                            </select>
-                        </label>
-                        <label>
-                            <br>
-                            <button class="btn btn-primary">Komutları kopyala</button>
-                        </label>
-                    </div>
-                </form>
-          
-         {{_col()}}
+        } ?>
+        <form action="?klonla" method="post">
+            @csrf
+            <div class="input-group">
+                <label >
+                    Kaynak
+                    <select name="from" id="" required class="form-control">
+                        <option value="">Seçiniz</option>
+                        <?php foreach($yetkilerim AS $y)  { 
+                        ?>
+                        <option value="{{$y}}">{{$y}}</option> 
+                        <?php } ?>
+                    </select>
+                </label>
+                <label >
+                    Hedef
+                    <select name="to" id="" required class="form-control">
+                        <option value="">Seçiniz</option>
+                        <?php foreach($yetkilerim AS $y)  { 
+                        ?>
+                        <option value="{{$y}}">{{$y}}</option> 
+                        <?php } ?>
+                    </select>
+                </label>
+                <label>
+                    <br>
+                    <button class="btn btn-primary">Komutları kopyala</button>
+                </label>
+            </div>
+        </form>
+        
+        {{_col()}}
+
+        {{col("col-6","Komut Temizle")}} 
+            <?php if(getisset("temizle")) {
+            
+                $komutlar = db("komut_istemi")
+                                ->where("imei",post("from"))
+                                ->delete();
+                bilgi("$komutlar adet komut {$_POST['from']} cihazından silinmiştir");
+                
+            } ?>
+            <form action="?temizle" method="post">
+                @csrf
+                <div class="input-group">
+                    <label>
+                        Kaynak
+                        <select name="from" id="" required class="form-control">
+                            <option value="">Seçiniz</option>
+                            <?php foreach($yetkilerim AS $y)  { 
+                            ?>
+                            <option value="{{$y}}">{{$y}}</option> 
+                            <?php } ?>
+                        </select>
+                    </label>
+                    
+                    <label>
+                        <br>
+                        <button class="btn btn-danger">Komutları sil</button>
+                    </label>
+                </div>
+            </form>
+        
+        {{_col()}}
     </div>
     
 

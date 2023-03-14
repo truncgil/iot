@@ -213,42 +213,48 @@ $(".ckeditor").each(function(){
 								}
 							]
 							});
-									/*
-                                $("#decimal" + id).html(decimal)
-                                    .unmask()
-                                    .mask(mask);
-            
-                                var data = google.visualization.arrayToDataTable([
-                                ['Label', 'Value'],
-                                ['', eval($("#decimal" + id).html())]
-                                ]);
-
-								$.get("?ajax=komut-son-durum-guncelle",{
-									'imei' : imei,
-									'command' : command,
-									'sonuc' : d
-								});
-                                
-                                var maks = max;
-                                var options = {
-                                        max: maks,
-                                        redFrom: maks*90/100, 
-                                        redTo: maks,
-                                        yellowFrom: maks*75/100, 
-                                        yellowTo: maks*90/100,
-                                        minorTicks: 5
-                                    };
-            
-                                var chart = new google.visualization.Gauge(document.getElementById('chart_div' + id));
-            
-                                chart.draw(data, options);
-								*/
-            
+						
                                 
             
                             }
                         }
                     }
+					
+					
+					 
+                }).fail(function(){
+                });
+			}
+			
+		});
+
+		$(".widget-guncelle2").on("click",function(){
+			if(calistir) {
+				calistir = false;
+			//	$(".widget-guncelle").hide();
+			var bu = $(this);
+			bu.show();
+			var command = $(this).attr("data-command");
+			var imei = $(this).attr("data-imei");
+			var bas = $(this).attr("data-bas");
+			var son = $(this).attr("data-son");
+			var id = $(this).attr("data-id");
+			var mask = $(this).attr("data-mask");
+			var carpan = $(this).attr("data-carpan");
+			var max = $(this).attr("data-maks");
+			bu.find("i").addClass("fa-spin");
+			var gauge = "container"+id;
+			$.ajaxSetup({
+				// Disable caching of AJAX responses
+				cache: false
+			});
+			$.get('https://app.olimpiyat.com.tr/client.php',{
+                    'imei' : imei,
+					'_' :  $.now(),
+                    'command' : command
+                }).done(function(d){
+					calistir = true;
+					location.reload();
 					
 					
 					 

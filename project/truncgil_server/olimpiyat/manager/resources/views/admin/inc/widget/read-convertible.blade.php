@@ -1,3 +1,18 @@
+<div class="btn btn-default  widget-guncelle2" 
+                        data-imei="{{$c->imei}}" 
+                        data-command="{{$c->json}}" 
+                        data-id="{{$c->id}}" 
+                        data-maks="{{$c->maks}}" 
+                        data-mask="{{$c->mask}}" 
+                        data-carpan="{{$c->carpan}}" 
+                        data-bas="{{$c->bas}}" 
+                        data-son="{{$c->son}}" 
+                        
+                        
+                        style="position: absolute;
+                        right: 25px;
+                        z-index:1000;
+                        top: 10px;"><i class="fa fa-refresh"></i></div>
 <?php 
 $tur_donusumu = db("tur_donusumleri")->where("title",$c2->title)->first();
 if(!isset($lastValue)) { 
@@ -22,7 +37,7 @@ var decimal = Math.round(parseInt(
                     lastValue, 
                     16
                 ));
-              
+              //console.log(decimal);
       
                     var maskingDecimal = decimal;
                    <?php if($tur_donusumu) {
@@ -33,6 +48,7 @@ var decimal = Math.round(parseInt(
                     donusum_data.forEach((item, index)=>{
                         item = item.split(":");
                         donusum_map[item[0]] = item[1];
+                        //console.log(item[0]);
                         if(eval(maskingDecimal) == item[0]) {
                             console.log(item[1]);
 

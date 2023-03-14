@@ -1,3 +1,18 @@
+<div class="btn btn-default  widget-guncelle" 
+                        data-imei="{{$c->imei}}" 
+                        data-command="{{$c->json}}" 
+                        data-id="{{$c->id}}" 
+                        data-maks="{{$c->maks}}" 
+                        data-mask="{{$c->mask}}" 
+                        data-carpan="{{$c->carpan}}" 
+                        data-bas="{{$c->bas}}" 
+                        data-son="{{$c->son}}" 
+                        
+                        
+                        style="position: absolute;
+                        right: 25px;
+                        z-index:1000;
+                        top: 10px;"><i class="fa fa-refresh"></i></div>
 <?php 
 if(!isset($lastValue)) { 
    $lastValue = "000000000";

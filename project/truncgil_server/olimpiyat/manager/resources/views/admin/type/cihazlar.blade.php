@@ -1,8 +1,9 @@
 <?php 
 $u = u();
-
+$users = kurum_users();
+$yetkilerim = cihaz_yetkilerim(); 
 if(getisset("delete")) {
-    $yetkilerim = cihaz_yetkilerim(); 
+    
     db("yetkiler")->whereIn("imei",$yetkilerim)->where("imei",get("delete"))->delete();
     db("cihazlar")->whereIn("imei",$yetkilerim)->where("imei",get("delete"))->delete();
 }
@@ -12,12 +13,20 @@ if(getisset("delete")) {
     <div class="row">
          {{col("col-12","Yeni Cihaz Kaydı")}} 
          <?php 
+         if(getisset("delete-perm")) {
+            db("yetkiler")->whereIn("imei",$yetkilerim)->where("id",get("delete-perm"))->delete();
+         }
          if(getisset("add")) {
             try {
                 if(strlen(post("imei"))==12) {
                     ekle2(
                         [
                             'imei' =>post("imei"),
+                            'takip_no' =>post("takip_no"),
+                            'firma' =>post("firma"),
+                            'kullanici' =>post("kullanici"),
+                            'cihaz_tipi' =>post("cihaz_tipi"),
+                            'guc' =>post("guc"),
                             'alias' => $u->alias
                         ]
                     , "yetkiler");
@@ -46,6 +55,21 @@ if(getisset("delete")) {
                 @csrf
                 IMEI (12 Haneli):
                 <input type="text" name="imei" required id="" class="form-control">
+                Takip No:
+                <input type="text" name="takip_no" id="" class="form-control">
+                Firma:
+                <input type="text" name="firma" id="" class="form-control">
+                Kullanıcı:
+                <input type="text" name="kullanici" id="" class="form-control">
+                Cihaz Tipi:
+                <input type="text" name="cihaz_tipi" id="" class="form-control">
+                Güç:
+                <input type="text" name="guc" id="" class="form-control">
+                Adres:
+                <input type="text" name="adres" id="" class="form-control">
+                Lokasyon:
+                <input type="text" name="lokasyon" id="" class="form-control">
+                
                 <button class="btn btn-primary mt-5">Cihaz Ekle</button>
 
 
@@ -123,6 +147,21 @@ if(getisset("delete")) {
                         <br>
                         <button class="btn btn-primary btn-hero mt-1">Ekle</button>
                      </form>
+                     <form action="?alias&imei={{get("imei")}}&ekle" method="post" class="text-center">
+                        @csrf
+                        <input type="hidden" name="imei" value="{{get("imei")}}">
+                        {{get("imei")}} IMEI Aygıtını Yetkilendir: 
+                        <select name="alias" required id="" class="form-control select2">
+                                <option value="">Kullanıcı Seçiniz</option>
+                            <?php foreach(kurum_users() AS $user)  { 
+                                ?>
+                                <option value="{{$user->id}}">{{$user->name}} {{$user->surname}} ({{$user->id}})</option> 
+                                <?php } ?>
+                        </select>
+                        <br>
+                        <button class="btn btn-primary btn-hero mt-1">Ekle</button>
+                     </form>
+
                       {{_col()}}
                       {{col("col-12","Yetkilendirilmiş Etki Alanları")}} 
                         <div class="table-responsive">
@@ -132,10 +171,26 @@ if(getisset("delete")) {
                                     <th>İşlem</th>
                                 </tr>
                                 <?php foreach($yetkiler AS $y)  { 
+                                    $id = (int) $y->alias;
                                 ?>
                                 <tr>
-                                    <td>{{$y->alias}}</td>
-                                    <td></td>
+                                    <td>
+                                        <?php if(isset($users[$y->alias])) {
+                                            $user = $users[$y->alias];
+                                             ?>
+                                            <i class="fa fa-user"></i>  {{$user->name}} {{$user->surname}} 
+                                             <?php 
+                                         
+                                        } else {
+                                             ?>
+                                             <i class="fa fa-globe"></i> {{$y->alias}} 
+                                             <?php 
+                                        } ?>
+                                    </td>
+                                    <td>
+                                        <a href="?imei={{get("imei")}}&alias&delete-perm={{$y->id}}" class="btn btn-danger" teyit="Bu yetkilendirmeyi silmek istediğinizden emin misiniz?"><i class="fa fa-times"></i></a>
+
+                                    </td>
                                 </tr> 
                                 <?php } ?>
                             </table>
@@ -152,6 +207,13 @@ if(getisset("delete")) {
                         <tr>
                             <th>Mac Adresi</th>
                             <th>İsim</th>
+                            <th>Takip No</th>
+                            <th>Firma</th>
+                            <th>Kullanıcı</th>
+                            <th>Cihaz Tipi</th>
+                            <th>Güç</th>
+                            <th>Adres</th>
+                            <th>Lokasyon</th>
                             <th>Son bağlantı</th>
                             <th>İşlem</th>
                         </tr>
@@ -165,6 +227,27 @@ if(getisset("delete")) {
                              <td>{{$c->imei}}</td>
                              <td>
                                 <input type="text" name="title" value="{{$c->title}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
+                             </td>
+                             <td>
+                                <input type="text" name="takip_no" value="{{$c->takip_no}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
+                             </td>
+                             <td>
+                                <input type="text" name="firma" value="{{$c->firma}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
+                             </td>
+                             <td>
+                                <input type="text" name="kullanici" value="{{$c->kullanici}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
+                             </td>
+                             <td>
+                                <input type="text" name="guc" value="{{$c->guc}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
+                             </td>
+                             <td>
+                                <input type="text" name="adres" value="{{$c->adres}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
+                             </td>
+                             <td>
+                                <input type="text" name="lokasyon" value="{{$c->lokasyon}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
+                             </td>
+                             <td>
+                                <input type="text" name="cihaz_tipi" value="{{$c->cihaz_tipi}}" id="{{$c->id}}" table="cihazlar" class="form-control edit">
                              </td>
                              <td>{{df($c->online)}}
                                 <div class="badge badge-success">{{zf($c->online)}}</div>
