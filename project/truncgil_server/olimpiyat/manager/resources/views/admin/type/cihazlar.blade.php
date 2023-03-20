@@ -147,15 +147,16 @@ if(getisset("delete")) {
                         <br>
                         <button class="btn btn-primary btn-hero mt-1">Ekle</button>
                      </form>
+                     <?php $users = db("users")->get(); ?>
                      <form action="?alias&imei={{get("imei")}}&ekle" method="post" class="text-center">
                         @csrf
                         <input type="hidden" name="imei" value="{{get("imei")}}">
                         {{get("imei")}} IMEI Aygıtını Yetkilendir: 
                         <select name="alias" required id="" class="form-control select2">
                                 <option value="">Kullanıcı Seçiniz</option>
-                            <?php foreach(kurum_users() AS $user)  { 
+                            <?php foreach($users AS $user)  { 
                                 ?>
-                                <option value="{{$user->id}}">{{$user->name}} {{$user->surname}} ({{$user->id}})</option> 
+                                <option value="{{$user->id}}">{{$user->name}} {{$user->surname}} ({{$user->id}}) / {{$user->alias}}</option> 
                                 <?php } ?>
                         </select>
                         <br>
